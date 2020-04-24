@@ -1,4 +1,5 @@
 #include <wx/wxprec.h>
+#include <iostream>
 
 class MyApp : public wxApp
 {
@@ -20,6 +21,9 @@ bool MyApp::OnInit()
 {
 	MyFrame *frame = new MyFrame();
 	frame->Show(true);
+	std::cout << "adfsdafsaf";
+	std::cout << "adfsdafsaf";
+	std::cout << "adfsdafsaf";
 	return true;
 }
 
