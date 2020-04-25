@@ -2,7 +2,6 @@
 #include "GUIMyFrame4.h"
 
 class MyApp : public wxApp {
-
 public:
 
 	virtual bool OnInit();
@@ -14,9 +13,10 @@ IMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()
 {
+
 	wxFrame *mainFrame = new GUIMyFrame4(NULL);
 	mainFrame->Show(true);
 	SetTopWindow(mainFrame);
-
+  
 	return true;
 }
