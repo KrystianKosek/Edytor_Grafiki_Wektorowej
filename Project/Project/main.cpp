@@ -1,5 +1,5 @@
 #include <wx/wx.h>
-#include "GUIMyFrame4.h"
+#include "GUIMyFrame1.h"
 
 class MyApp : public wxApp {
 
@@ -14,7 +14,7 @@ IMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()
 {
-	wxFrame *mainFrame = new GUIMyFrame4(NULL);
+	wxFrame *mainFrame = new GUIMyFrame1(NULL);
 	mainFrame->Show(true);
 	SetTopWindow(mainFrame);
 
