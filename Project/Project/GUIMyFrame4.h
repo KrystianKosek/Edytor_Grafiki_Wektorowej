@@ -28,6 +28,7 @@ class GUIMyFrame4 : public MyFrame4
 		void move_figure_button12OnButtonClick( wxCommandEvent& event );
 		void load_image_button9OnButtonClick( wxCommandEvent& event );
 		void delete_figure_button15OnButtonClick( wxCommandEvent& event );
+
 	public:
 		/** Constructor */
 		GUIMyFrame4( wxWindow* parent );
