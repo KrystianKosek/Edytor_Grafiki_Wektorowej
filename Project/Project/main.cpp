@@ -1,41 +1,22 @@
-#include <wx/wxprec.h>
+#include <wx/wx.h>
+#include "GUIMyFrame4.h"
 
-class MyApp : public wxApp
-{
+class MyApp : public wxApp {
 public:
+
 	virtual bool OnInit();
+	virtual int OnExit() { return 0; }
+
 };
 
-class MyFrame : public wxFrame
-{
-public:
-	MyFrame();
-private:
-	void OnExit(wxCommandEvent& event);
-};
-
-wxIMPLEMENT_APP(MyApp);
+IMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()
 {
-	MyFrame *frame = new MyFrame();
-	frame->Show(true);
+
+	wxFrame *mainFrame = new GUIMyFrame4(NULL);
+	mainFrame->Show(true);
+	SetTopWindow(mainFrame);
+  
 	return true;
-}
-
-MyFrame::MyFrame() : wxFrame(NULL, wxID_ANY, "wxStart")
-{
-	wxMenu *menuFile = new wxMenu;
-	menuFile->Append(wxID_EXIT);
-
-	wxMenuBar *menuBar = new wxMenuBar;
-	menuBar->Append(menuFile, "&File");
-
-	SetMenuBar(menuBar);
-
-	Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
-}
-void MyFrame::OnExit(wxCommandEvent& event)
-{
-	Close(true);
 }
