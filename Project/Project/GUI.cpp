@@ -44,7 +44,7 @@ MyFrame4::MyFrame4( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	draw_curve_button = new wxButton( this, wxID_ANY, wxT("krzywa"), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer1->Add( draw_curve_button, wxGBPosition( 0, 1 ), wxGBSpan( 1, 1 ), wxALL, 5 );
 	
-	draw_rectangle_button = new wxButton( this, wxID_ANY, wxT("prostokąt"), wxDefaultPosition, wxDefaultSize, 0 );
+	draw_rectangle_button = new wxButton( this, wxID_ANY, wxT("prostąk"), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer1->Add( draw_rectangle_button, wxGBPosition( 1, 0 ), wxGBSpan( 1, 1 ), wxALL, 5 );
 	
 	draw_circle_button = new wxButton( this, wxID_ANY, wxT("okrąg"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -78,7 +78,7 @@ MyFrame4::MyFrame4( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	rotate_figure_button11 = new wxButton( this, wxID_ANY, wxT("obróć"), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer1->Add( rotate_figure_button11, wxGBPosition( 6, 1 ), wxGBSpan( 1, 1 ), wxALL, 5 );
 	
-	move_figure_button12 = new wxButton( this, wxID_ANY, wxT("przsuń"), wxDefaultPosition, wxDefaultSize, 0 );
+	move_figure_button12 = new wxButton( this, wxID_ANY, wxT("przesuń"), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer1->Add( move_figure_button12, wxGBPosition( 6, 0 ), wxGBSpan( 1, 1 ), wxALL, 5 );
 	
 	m_button13 = new wxButton( this, wxID_ANY, wxT("zmień\nrozmiar"), wxDefaultPosition, wxDefaultSize, 0 );
