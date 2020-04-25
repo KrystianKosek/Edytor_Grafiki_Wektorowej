@@ -73,7 +73,7 @@ class MyFrame4 : public wxFrame
 	
 	public:
 		
-		MyFrame4( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 999,690 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		MyFrame4( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = "Edytor grafiki wektorowej - Projekt Adrian Góral, Krystian Kosek i Bartosz Miko³ajczyk", const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 999,690 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~MyFrame4();
 	
