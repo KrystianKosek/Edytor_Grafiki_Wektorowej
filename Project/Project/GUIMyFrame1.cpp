@@ -4,6 +4,7 @@ GUIMyFrame1::GUIMyFrame1( wxWindow* parent ): MyFrame1(nullptr), image_handler(n
 {
 	wxImage::AddHandler(image_handler);
 	_fileDialog = new wxFileDialog(this, _("Wybierz plik:"), _(""), _("result.jpg"), _(".jpg"), wxFD_SAVE);
+	number_of_sides = 3;
 }
 
 void GUIMyFrame1::m_panel1OnPaint( wxPaintEvent& event )
@@ -58,6 +59,18 @@ void GUIMyFrame1::filling_checkBox1OnCheckBox( wxCommandEvent& event )
 void GUIMyFrame1::figure_sides_choice1OnChoice( wxCommandEvent& event )
 {
 // TODO: Implement figure_sides_choice1OnChoice
+	try
+	{
+		number_of_sides = event.GetSelection() + 3;
+		std::ofstream myfile;
+		myfile.open("example.txt");
+		myfile << number_of_sides;
+		myfile.close();
+	}
+	catch (const std::exception& e)
+	{
+		number_of_sides = 3;
+	}
 }
 
 void GUIMyFrame1::line_color_button7OnButtonClick( wxCommandEvent& event )
