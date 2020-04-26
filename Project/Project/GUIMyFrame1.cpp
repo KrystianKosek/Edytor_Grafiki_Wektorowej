@@ -62,10 +62,6 @@ void GUIMyFrame1::figure_sides_choice1OnChoice( wxCommandEvent& event )
 	try
 	{
 		number_of_sides = event.GetSelection() + 3;
-		std::ofstream myfile;
-		myfile.open("example.txt");
-		myfile << number_of_sides;
-		myfile.close();
 	}
 	catch (const std::exception& e)
 	{
