@@ -9,7 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-MyFrame4::MyFrame4( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
@@ -44,7 +44,7 @@ MyFrame4::MyFrame4( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	draw_curve_button = new wxButton( this, wxID_ANY, wxT("krzywa"), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer1->Add( draw_curve_button, wxGBPosition( 0, 1 ), wxGBSpan( 1, 1 ), wxALL, 5 );
 	
-	draw_rectangle_button = new wxButton( this, wxID_ANY, wxT("prostąk"), wxDefaultPosition, wxDefaultSize, 0 );
+	draw_rectangle_button = new wxButton( this, wxID_ANY, wxT("prostokąt"), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer1->Add( draw_rectangle_button, wxGBPosition( 1, 0 ), wxGBSpan( 1, 1 ), wxALL, 5 );
 	
 	draw_circle_button = new wxButton( this, wxID_ANY, wxT("okrąg"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -72,8 +72,8 @@ MyFrame4::MyFrame4( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	save_image_button8 = new wxButton( this, wxID_ANY, wxT("zapisz obraz"), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer1->Add( save_image_button8, wxGBPosition( 8, 0 ), wxGBSpan( 1, 1 ), wxALL, 5 );
 	
-	m_button10 = new wxButton( this, wxID_ANY, wxT("kolor \nwypełnienia"), wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer1->Add( m_button10, wxGBPosition( 5, 1 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	figure_color_filling_button10 = new wxButton( this, wxID_ANY, wxT("kolor \nwypełnienia"), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer1->Add( figure_color_filling_button10, wxGBPosition( 5, 1 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	rotate_figure_button11 = new wxButton( this, wxID_ANY, wxT("obróć"), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer1->Add( rotate_figure_button11, wxGBPosition( 6, 1 ), wxGBSpan( 1, 1 ), wxALL, 5 );
@@ -81,14 +81,14 @@ MyFrame4::MyFrame4( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	move_figure_button12 = new wxButton( this, wxID_ANY, wxT("przesuń"), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer1->Add( move_figure_button12, wxGBPosition( 6, 0 ), wxGBSpan( 1, 1 ), wxALL, 5 );
 	
-	m_button13 = new wxButton( this, wxID_ANY, wxT("zmień\nrozmiar"), wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer1->Add( m_button13, wxGBPosition( 5, 0 ), wxGBSpan( 1, 1 ), wxALL, 5 );
+	size_change_button13 = new wxButton( this, wxID_ANY, wxT("zmień\nrozmiar"), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer1->Add( size_change_button13, wxGBPosition( 5, 0 ), wxGBSpan( 1, 1 ), wxALL, 5 );
 	
 	load_image_button9 = new wxButton( this, wxID_ANY, wxT("wczytaj obraz"), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer1->Add( load_image_button9, wxGBPosition( 8, 1 ), wxGBSpan( 1, 1 ), wxALL, 5 );
 	
-	m_button14 = new wxButton( this, wxID_ANY, wxT("przesuń\nwierzchołek"), wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer1->Add( m_button14, wxGBPosition( 7, 0 ), wxGBSpan( 1, 1 ), wxALL, 5 );
+	move_wierzcholek_button14 = new wxButton( this, wxID_ANY, wxT("przesuń\nwierzchołek"), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer1->Add( move_wierzcholek_button14, wxGBPosition( 7, 0 ), wxGBSpan( 1, 1 ), wxALL, 5 );
 	
 	delete_figure_button15 = new wxButton( this, wxID_ANY, wxT("usuń"), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer1->Add( delete_figure_button15, wxGBPosition( 7, 1 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -107,36 +107,48 @@ MyFrame4::MyFrame4( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	draw_line_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::draw_line_buttonOnButtonClick ), NULL, this );
-	draw_curve_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::draw_curve_buttonOnButtonClick ), NULL, this );
-	draw_rectangle_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::draw_rectangle_buttonOnButtonClick ), NULL, this );
-	any_figure_button4->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::any_figure_button4OnButtonClick ), NULL, this );
-	figure_int_circle_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::figure_int_circle_button12OnButtonClick ), NULL, this );
-	filling_checkBox1->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame4::filling_checkBox1OnCheckBox ), NULL, this );
-	figure_sides_choice1->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MyFrame4::figure_sides_choice1OnChoice ), NULL, this );
-	line_color_button7->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::line_color_button7OnButtonClick ), NULL, this );
-	save_image_button8->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::save_image_button8OnButtonClick ), NULL, this );
-	rotate_figure_button11->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::rotate_figure_button11OnButtonClick ), NULL, this );
-	move_figure_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::move_figure_button12OnButtonClick ), NULL, this );
-	load_image_button9->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::load_image_button9OnButtonClick ), NULL, this );
-	delete_figure_button15->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::delete_figure_button15OnButtonClick ), NULL, this );
+	m_panel1->Connect( wxEVT_PAINT, wxPaintEventHandler( MyFrame1::m_panel1OnPaint ), NULL, this );
+	m_panel1->Connect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( MyFrame1::m_panel1OnUpdateUI ), NULL, this );
+	draw_line_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::draw_line_buttonOnButtonClick ), NULL, this );
+	draw_curve_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::draw_curve_buttonOnButtonClick ), NULL, this );
+	draw_rectangle_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::draw_rectangle_buttonOnButtonClick ), NULL, this );
+	draw_circle_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::draw_circle_buttonOnButtonClick ), NULL, this );
+	any_figure_button4->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::any_figure_button4OnButtonClick ), NULL, this );
+	figure_int_circle_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::figure_int_circle_button12OnButtonClick ), NULL, this );
+	filling_checkBox1->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame1::filling_checkBox1OnCheckBox ), NULL, this );
+	figure_sides_choice1->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MyFrame1::figure_sides_choice1OnChoice ), NULL, this );
+	line_color_button7->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::line_color_button7OnButtonClick ), NULL, this );
+	save_image_button8->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::save_image_button8OnButtonClick ), NULL, this );
+	figure_color_filling_button10->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::figure_color_filling_button10OnButtonClick ), NULL, this );
+	rotate_figure_button11->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::rotate_figure_button11OnButtonClick ), NULL, this );
+	move_figure_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::move_figure_button12OnButtonClick ), NULL, this );
+	size_change_button13->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::size_change_button13OnButtonClick ), NULL, this );
+	load_image_button9->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::load_image_button9OnButtonClick ), NULL, this );
+	move_wierzcholek_button14->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::move_wierzcholek_button14OnButtonClick ), NULL, this );
+	delete_figure_button15->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::delete_figure_button15OnButtonClick ), NULL, this );
 }
 
-MyFrame4::~MyFrame4()
+MyFrame1::~MyFrame1()
 {
 	// Disconnect Events
-	draw_line_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::draw_line_buttonOnButtonClick ), NULL, this );
-	draw_curve_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::draw_curve_buttonOnButtonClick ), NULL, this );
-	draw_rectangle_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::draw_rectangle_buttonOnButtonClick ), NULL, this );
-	any_figure_button4->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::any_figure_button4OnButtonClick ), NULL, this );
-	figure_int_circle_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::figure_int_circle_button12OnButtonClick ), NULL, this );
-	filling_checkBox1->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame4::filling_checkBox1OnCheckBox ), NULL, this );
-	figure_sides_choice1->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MyFrame4::figure_sides_choice1OnChoice ), NULL, this );
-	line_color_button7->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::line_color_button7OnButtonClick ), NULL, this );
-	save_image_button8->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::save_image_button8OnButtonClick ), NULL, this );
-	rotate_figure_button11->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::rotate_figure_button11OnButtonClick ), NULL, this );
-	move_figure_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::move_figure_button12OnButtonClick ), NULL, this );
-	load_image_button9->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::load_image_button9OnButtonClick ), NULL, this );
-	delete_figure_button15->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame4::delete_figure_button15OnButtonClick ), NULL, this );
+	m_panel1->Disconnect( wxEVT_PAINT, wxPaintEventHandler( MyFrame1::m_panel1OnPaint ), NULL, this );
+	m_panel1->Disconnect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( MyFrame1::m_panel1OnUpdateUI ), NULL, this );
+	draw_line_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::draw_line_buttonOnButtonClick ), NULL, this );
+	draw_curve_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::draw_curve_buttonOnButtonClick ), NULL, this );
+	draw_rectangle_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::draw_rectangle_buttonOnButtonClick ), NULL, this );
+	draw_circle_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::draw_circle_buttonOnButtonClick ), NULL, this );
+	any_figure_button4->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::any_figure_button4OnButtonClick ), NULL, this );
+	figure_int_circle_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::figure_int_circle_button12OnButtonClick ), NULL, this );
+	filling_checkBox1->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame1::filling_checkBox1OnCheckBox ), NULL, this );
+	figure_sides_choice1->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MyFrame1::figure_sides_choice1OnChoice ), NULL, this );
+	line_color_button7->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::line_color_button7OnButtonClick ), NULL, this );
+	save_image_button8->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::save_image_button8OnButtonClick ), NULL, this );
+	figure_color_filling_button10->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::figure_color_filling_button10OnButtonClick ), NULL, this );
+	rotate_figure_button11->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::rotate_figure_button11OnButtonClick ), NULL, this );
+	move_figure_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::move_figure_button12OnButtonClick ), NULL, this );
+	size_change_button13->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::size_change_button13OnButtonClick ), NULL, this );
+	load_image_button9->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::load_image_button9OnButtonClick ), NULL, this );
+	move_wierzcholek_button14->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::move_wierzcholek_button14OnButtonClick ), NULL, this );
+	delete_figure_button15->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::delete_figure_button15OnButtonClick ), NULL, this );
 	
 }

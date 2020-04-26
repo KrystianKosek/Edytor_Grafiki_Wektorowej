@@ -22,6 +22,11 @@ void GUIMyFrame4::draw_rectangle_buttonOnButtonClick( wxCommandEvent& event )
 // TODO: Implement draw_rectangle_buttonOnButtonClick
 }
 
+void GUIMyFrame4::draw_circle_buttonOnButtonClick( wxCommandEvent& event )
+{
+// TODO: Implement draw_circle_buttonOnButtonClick
+}
+
 void GUIMyFrame4::any_figure_button4OnButtonClick( wxCommandEvent& event )
 {
 // TODO: Implement any_figure_button4OnButtonClick
@@ -52,6 +57,11 @@ void GUIMyFrame4::save_image_button8OnButtonClick( wxCommandEvent& event )
 // TODO: Implement save_image_button8OnButtonClick
 }
 
+void GUIMyFrame4::m_button10OnButtonClick( wxCommandEvent& event )
+{
+// TODO: Implement m_button10OnButtonClick
+}
+
 void GUIMyFrame4::rotate_figure_button11OnButtonClick( wxCommandEvent& event )
 {
 // TODO: Implement rotate_figure_button11OnButtonClick
@@ -62,9 +72,19 @@ void GUIMyFrame4::move_figure_button12OnButtonClick( wxCommandEvent& event )
 // TODO: Implement move_figure_button12OnButtonClick
 }
 
+void GUIMyFrame4::m_button13OnButtonClick( wxCommandEvent& event )
+{
+// TODO: Implement m_button13OnButtonClick
+}
+
 void GUIMyFrame4::load_image_button9OnButtonClick( wxCommandEvent& event )
 {
 // TODO: Implement load_image_button9OnButtonClick
+}
+
+void GUIMyFrame4::m_button14OnButtonClick( wxCommandEvent& event )
+{
+// TODO: Implement m_button14OnButtonClick
 }
 
 void GUIMyFrame4::delete_figure_button15OnButtonClick( wxCommandEvent& event )
