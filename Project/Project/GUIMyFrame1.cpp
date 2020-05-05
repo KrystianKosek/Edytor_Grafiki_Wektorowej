@@ -8,6 +8,7 @@ GUIMyFrame1::GUIMyFrame1( wxWindow* parent ): MyFrame1(nullptr), image_handler(n
 	drawALine = false;
 	drawACircle = false;
 	isBegin = false;
+	drawARectangle = false;
 }
 
 void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
@@ -39,6 +40,16 @@ void GUIMyFrame1::panelOnMouseEvents(wxMouseEvent& event) {
 		begin = event.GetPosition();
 		isBegin = true;
 	}
+	else if ((event.LeftDown() && drawARectangle) && isBegin) {
+		wxPoint end = event.GetPosition();
+		rectangles.insert(std::make_pair(new wxPoint(begin), new wxPoint(end)));
+		isBegin = false;
+		drawARectangle = false;
+	}
+	else if (event.LeftDown() && drawARectangle) {
+		begin = event.GetPosition();
+		isBegin = true;
+	}
 	
 }
 
@@ -61,6 +72,7 @@ void GUIMyFrame1::draw_line_buttonOnButtonClick(wxCommandEvent& event )
 	drawALine = true;
 }
 
+// Krzywa beziera???
 void GUIMyFrame1::draw_curve_buttonOnButtonClick( wxCommandEvent& event )
 {
 // TODO: Implement draw_curve_buttonOnButtonClick
@@ -68,12 +80,18 @@ void GUIMyFrame1::draw_curve_buttonOnButtonClick( wxCommandEvent& event )
 
 void GUIMyFrame1::draw_rectangle_buttonOnButtonClick( wxCommandEvent& event )
 {
-// TODO: Implement draw_rectangle_buttonOnButtonClick
+	if (drawACircle)
+		drawARectangle = false;
+	else
+		drawARectangle = true;
 }
 
 void GUIMyFrame1::draw_circle_buttonOnButtonClick( wxCommandEvent& event )
 {
-	drawACircle = true;
+	if (drawARectangle)
+		drawACircle = false;
+	else
+		drawACircle = true;
 }
 
 void GUIMyFrame1::any_figure_button4OnButtonClick( wxCommandEvent& event )
@@ -189,6 +207,14 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 	dcBuffer.SetBrush(wxBrush(*wxTRANSPARENT_BRUSH));
 	for (auto itr = circles.begin(); itr != circles.end(); itr++) {
 		dcBuffer.DrawCircle(*(itr->first), itr->second);
+	}
+	for (auto itr = rectangles.begin(); itr != rectangles.end(); itr++) {
+		wxPoint leftUp = wxPoint(itr->first->x, itr->second->y);
+		wxPoint rightDown = wxPoint(itr->second->x, itr->first->y);
+		dcBuffer.DrawLine(*(itr->first), leftUp);
+		dcBuffer.DrawLine(*(itr->first), rightDown);
+		dcBuffer.DrawLine(*(itr->second), leftUp);
+		dcBuffer.DrawLine(*(itr->second), rightDown);
 	}
 }
 

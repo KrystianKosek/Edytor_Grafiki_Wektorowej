@@ -67,12 +67,14 @@ class GUIMyFrame1 : public MyFrame1
 		wxImageHandler * image_handler;
 		wxFileDialog * _fileDialog;
 		int number_of_sides;
-		std::vector<wxPoint> points;
+		std::vector<wxPoint> points;	// zbiór punktów, na razie 1d, docelowo trzeba to przerobić na vector<vector<wxPoint>>
 		bool drawALine;	// ta zmienna jak jest true, to znaczy że rysujemy linie aktualnie
-		bool drawACircle;
-		std::multimap<wxPoint *, float> circles;
-		wxPoint begin;
-		bool isBegin;
+		bool drawACircle;	// ta zmienna jak jest jest true to znaczy że rysujemy okrąg
+		std::multimap<wxPoint *, float> circles;	// mapa punktów, klucz jest środkiem okręgu, wartość to prmień
+		wxPoint begin;	// punkt startowy używany do rysowania okregów ( środek okręgu )
+		bool isBegin;	// jest true w momencie gdy użytkownik kliknął i wybrał środek rysowanego okręgu
+		bool drawARectangle;	// jeśli jest true to rysujemy prostokąt
+		std::multimap<wxPoint *, wxPoint *> rectangles;		// mapa punktów, klucz jest pkt dolnym lewym, wartośc jest pkt górnym prawym
 };
 
 #endif // __GUIMyFrame1__
