@@ -1,12 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun 17 2015)
+// C++ code generated with wxFormBuilder (version Oct 26 2018)
 // http://www.wxformbuilder.org/
 //
-// PLEASE DO "NOT" EDIT THIS FILE!
+// PLEASE DO *NOT* EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __GUI_H__
-#define __GUI_H__
+#pragma once
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
@@ -17,6 +16,9 @@
 #include <wx/settings.h>
 #include <wx/string.h>
 #include <wx/sizer.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
+#include <wx/icon.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
@@ -30,10 +32,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// Class MyFrame1
 ///////////////////////////////////////////////////////////////////////////////
-class MyFrame1 : public wxFrame 
+class MyFrame1 : public wxFrame
 {
 	private:
-	
+
 	protected:
 		wxPanel* m_panel1;
 		wxButton* draw_line_button;
@@ -54,8 +56,11 @@ class MyFrame1 : public wxFrame
 		wxButton* move_wierzcholek_button14;
 		wxButton* delete_figure_button15;
 		wxStaticText* m_staticText1;
-		
+
 		// Virtual event handlers, overide them in your derived class
+		virtual void panelOnLeftDown( wxMouseEvent& event ) { event.Skip(); }
+		virtual void panelOnLeftUp( wxMouseEvent& event ) { event.Skip(); }
+		virtual void panelOnMouseEvents( wxMouseEvent& event ) { event.Skip(); }
 		virtual void m_panel1OnPaint( wxPaintEvent& event ) { event.Skip(); }
 		virtual void m_panel1OnUpdateUI( wxUpdateUIEvent& event ) { event.Skip(); }
 		virtual void draw_line_buttonOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
@@ -75,14 +80,13 @@ class MyFrame1 : public wxFrame
 		virtual void load_image_button9OnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void move_wierzcholek_button14OnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void delete_figure_button15OnButtonClick( wxCommandEvent& event ) { event.Skip(); }
-		
-	
+
+
 	public:
-		
+
 		MyFrame1( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Edytor Grafiki Wektorowej - Projekt Adrian Góral, Krystian Kosek i Bartosz Mikołajczyk"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 999,690 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
-		
+
 		~MyFrame1();
-	
+
 };
 
-#endif //__GUI_H__

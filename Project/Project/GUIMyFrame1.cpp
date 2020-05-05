@@ -1,10 +1,45 @@
-#include "GUIMyFrame1.h"
+﻿#include "GUIMyFrame1.h"
 
 GUIMyFrame1::GUIMyFrame1( wxWindow* parent ): MyFrame1(nullptr), image_handler(new wxPNGHandler())
 {
 	wxImage::AddHandler(image_handler);
 	_fileDialog = new wxFileDialog(this, _("Wybierz plik:"), _(""), _("result.jpg"), _(".jpg"), wxFD_SAVE);
 	number_of_sides = 3;
+	drawALine = false;
+	drawACircle = false;
+	isBegin = false;
+}
+
+void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
+	// na razie nie używane
+}
+void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
+	// na razie nie używane
+}
+void GUIMyFrame1::panelOnMouseEvents(wxMouseEvent& event) {
+	// sprawdzamy czy użytkownik chce rysować linie
+	if (event.LeftDown() && drawALine) {
+		wxPoint point = event.GetPosition();
+		std::ofstream zapis("onMouseEvents.txt");
+		zapis << "ASDASDA" << point.x << " " << point.y;
+		zapis.close();
+		drawALine = false;
+		points.push_back(wxPoint(point.x, point.y));
+	}
+	else if ((event.LeftDown() && drawACircle) && isBegin) {
+		wxPoint end = event.GetPosition();
+		float x = abs(begin.x - end.x);
+		float y = abs(begin.y - end.y);
+		float r = sqrt(pow(x, 2) + pow(y, 2));
+		circles.insert(std::make_pair(new wxPoint(begin), r));
+		drawACircle = false;
+		isBegin = false;
+	}
+	else if (event.LeftDown() && drawACircle) {
+		begin = event.GetPosition();
+		isBegin = true;
+	}
+	
 }
 
 void GUIMyFrame1::m_panel1OnPaint( wxPaintEvent& event )
@@ -21,9 +56,9 @@ void GUIMyFrame1::m_panel1OnUpdateUI( wxUpdateUIEvent& event )
 	draw(dcClient);
 }
 
-void GUIMyFrame1::draw_line_buttonOnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::draw_line_buttonOnButtonClick(wxCommandEvent& event )
 {
-// TODO: Implement draw_line_buttonOnButtonClick
+	drawALine = true;
 }
 
 void GUIMyFrame1::draw_curve_buttonOnButtonClick( wxCommandEvent& event )
@@ -38,7 +73,7 @@ void GUIMyFrame1::draw_rectangle_buttonOnButtonClick( wxCommandEvent& event )
 
 void GUIMyFrame1::draw_circle_buttonOnButtonClick( wxCommandEvent& event )
 {
-// TODO: Implement draw_circle_buttonOnButtonClick
+	drawACircle = true;
 }
 
 void GUIMyFrame1::any_figure_button4OnButtonClick( wxCommandEvent& event )
@@ -59,14 +94,7 @@ void GUIMyFrame1::filling_checkBox1OnCheckBox( wxCommandEvent& event )
 void GUIMyFrame1::figure_sides_choice1OnChoice( wxCommandEvent& event )
 {
 // TODO: Implement figure_sides_choice1OnChoice
-	try
-	{
-		number_of_sides = event.GetSelection() + 3;
-	}
-	catch (const std::exception& e)
-	{
-		number_of_sides = 3;
-	}
+	number_of_sides = event.GetSelection() + 3;
 }
 
 void GUIMyFrame1::line_color_button7OnButtonClick( wxCommandEvent& event )
@@ -153,6 +181,15 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 	PrepareDC(dcBuffer);
 	dcBuffer.Clear();
 	dcBuffer.SetBrush(wxBrush(*wxWHITE_BRUSH));
+
+	dcBuffer.SetPen(wxPen(wxColor(line_colour), 1));
+	for (unsigned i = 1; i < points.size(); i++) {
+		dcBuffer.DrawLine(points[i - 1], points[i]);
+	}
+	dcBuffer.SetBrush(wxBrush(*wxTRANSPARENT_BRUSH));
+	for (auto itr = circles.begin(); itr != circles.end(); itr++) {
+		dcBuffer.DrawCircle(*(itr->first), itr->second);
+	}
 }
 
 GUIMyFrame1::~GUIMyFrame1() {
