@@ -9,6 +9,7 @@ GUIMyFrame1::GUIMyFrame1( wxWindow* parent ): MyFrame1(nullptr), image_handler(n
 	drawACircle = false;
 	isBegin = false;
 	drawARectangle = false;
+	numberOfFigures = 0;
 }
 
 void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
@@ -24,8 +25,7 @@ void GUIMyFrame1::panelOnMouseEvents(wxMouseEvent& event) {
 		std::ofstream zapis("onMouseEvents.txt");
 		zapis << "ASDASDA" << point.x << " " << point.y;
 		zapis.close();
-		drawALine = false;
-		points.push_back(wxPoint(point.x, point.y));
+		points[points.size() - 1].push_back(wxPoint(point.x, point.y));
 	}
 	else if ((event.LeftDown() && drawACircle) && isBegin) {
 		wxPoint end = event.GetPosition();
@@ -69,7 +69,13 @@ void GUIMyFrame1::m_panel1OnUpdateUI( wxUpdateUIEvent& event )
 
 void GUIMyFrame1::draw_line_buttonOnButtonClick(wxCommandEvent& event )
 {
-	drawALine = true;
+	if (drawALine) {
+		drawALine = false;
+	}
+	else {
+		drawALine = true;
+		points.push_back({});
+	}
 }
 
 // Krzywa beziera???
@@ -80,18 +86,32 @@ void GUIMyFrame1::draw_curve_buttonOnButtonClick( wxCommandEvent& event )
 
 void GUIMyFrame1::draw_rectangle_buttonOnButtonClick( wxCommandEvent& event )
 {
-	if (drawACircle)
-		drawARectangle = false;
-	else
+	if (drawACircle || drawALine) {
+		drawACircle = false;
+		isBegin = false;
+		drawALine = false;
+	}
+	if (!drawARectangle)
 		drawARectangle = true;
+	else {
+		drawARectangle = false;
+		isBegin = false;
+	}
 }
 
 void GUIMyFrame1::draw_circle_buttonOnButtonClick( wxCommandEvent& event )
 {
-	if (drawARectangle)
-		drawACircle = false;
-	else
+	if (drawARectangle || drawALine) {
+		drawARectangle = false;
+		isBegin = false;
+		drawALine = false;
+	}
+	if (!drawACircle)
 		drawACircle = true;
+	else {
+		drawACircle = false;
+		isBegin = false;
+	}
 }
 
 void GUIMyFrame1::any_figure_button4OnButtonClick( wxCommandEvent& event )
@@ -201,9 +221,14 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 	dcBuffer.SetBrush(wxBrush(*wxWHITE_BRUSH));
 
 	dcBuffer.SetPen(wxPen(wxColor(line_colour), 1));
-	for (unsigned i = 1; i < points.size(); i++) {
-		dcBuffer.DrawLine(points[i - 1], points[i]);
+	if (points.size() > 0) {
+		for (unsigned i = 0; i < points.size(); i++) {
+			for (unsigned j = 1; j < points[i].size(); j++) {
+				dcBuffer.DrawLine(points[i][j - 1], points[i][j]);
+			}
+		}
 	}
+
 	dcBuffer.SetBrush(wxBrush(*wxTRANSPARENT_BRUSH));
 	for (auto itr = circles.begin(); itr != circles.end(); itr++) {
 		dcBuffer.DrawCircle(*(itr->first), itr->second);
@@ -216,6 +241,7 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 		dcBuffer.DrawLine(*(itr->second), leftUp);
 		dcBuffer.DrawLine(*(itr->second), rightDown);
 	}
+
 }
 
 GUIMyFrame1::~GUIMyFrame1() {
