@@ -9,7 +9,8 @@ GUIMyFrame1::GUIMyFrame1( wxWindow* parent ): MyFrame1(nullptr), image_handler(n
 	drawACircle = false;
 	isBegin = false;
 	drawARectangle = false;
-	numberOfFigures = 0;
+	drawingAFigureWithNSides = false;
+	sidesLeft = 0;
 }
 
 void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
@@ -19,14 +20,22 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 	// na razie nie używane
 }
 void GUIMyFrame1::panelOnMouseEvents(wxMouseEvent& event) {
-	// sprawdzamy czy użytkownik chce rysować linie
+	// rysowanie linii
 	if (event.LeftDown() && drawALine) {
 		wxPoint point = event.GetPosition();
-		std::ofstream zapis("onMouseEvents.txt");
-		zapis << "ASDASDA" << point.x << " " << point.y;
-		zapis.close();
 		points[points.size() - 1].push_back(wxPoint(point.x, point.y));
 	}
+	// rysowanie tych dziwnych figur zlożonych z iluś tam boków
+	else if ((event.LeftDown() && sidesLeft > 0) && drawingAFigureWithNSides) {
+		sidesLeft--;
+		wxPoint point = event.GetPosition();
+		weirdFigures[weirdFigures.size() - 1].push_back(point);
+		if (sidesLeft == 0) {
+			weirdFigures[weirdFigures.size() - 1].push_back(weirdFigures[weirdFigures.size() - 1][0]);
+			drawingAFigureWithNSides = false;
+		}
+	}
+	// rysowanie okręgu
 	else if ((event.LeftDown() && drawACircle) && isBegin) {
 		wxPoint end = event.GetPosition();
 		float x = abs(begin.x - end.x);
@@ -36,16 +45,19 @@ void GUIMyFrame1::panelOnMouseEvents(wxMouseEvent& event) {
 		drawACircle = false;
 		isBegin = false;
 	}
+	// rysowanie okręgu też
 	else if (event.LeftDown() && drawACircle) {
 		begin = event.GetPosition();
 		isBegin = true;
 	}
+	// rysowanie prostokąta
 	else if ((event.LeftDown() && drawARectangle) && isBegin) {
 		wxPoint end = event.GetPosition();
 		rectangles.insert(std::make_pair(new wxPoint(begin), new wxPoint(end)));
 		isBegin = false;
 		drawARectangle = false;
 	}
+	// rysowanie prostokąta też :)
 	else if (event.LeftDown() && drawARectangle) {
 		begin = event.GetPosition();
 		isBegin = true;
@@ -67,8 +79,17 @@ void GUIMyFrame1::m_panel1OnUpdateUI( wxUpdateUIEvent& event )
 	draw(dcClient);
 }
 
+// rysowanie lini
 void GUIMyFrame1::draw_line_buttonOnButtonClick(wxCommandEvent& event )
 {
+	if (drawingAFigureWithNSides) {
+		return;
+	}
+	if (drawARectangle || drawACircle) {
+		drawACircle = false;
+		isBegin = false;
+		drawACircle = false;
+	}
 	if (drawALine) {
 		drawALine = false;
 	}
@@ -84,8 +105,12 @@ void GUIMyFrame1::draw_curve_buttonOnButtonClick( wxCommandEvent& event )
 // TODO: Implement draw_curve_buttonOnButtonClick
 }
 
+// rysowanie prostokąta
 void GUIMyFrame1::draw_rectangle_buttonOnButtonClick( wxCommandEvent& event )
 {
+	if (drawingAFigureWithNSides) {
+		return;
+	}
 	if (drawACircle || drawALine) {
 		drawACircle = false;
 		isBegin = false;
@@ -99,8 +124,12 @@ void GUIMyFrame1::draw_rectangle_buttonOnButtonClick( wxCommandEvent& event )
 	}
 }
 
+// rysowanie okręgu
 void GUIMyFrame1::draw_circle_buttonOnButtonClick( wxCommandEvent& event )
 {
+	if (drawingAFigureWithNSides) {
+		return;
+	}
 	if (drawARectangle || drawALine) {
 		drawARectangle = false;
 		isBegin = false;
@@ -114,9 +143,21 @@ void GUIMyFrame1::draw_circle_buttonOnButtonClick( wxCommandEvent& event )
 	}
 }
 
+// rysowanie tych dziwnych figur
 void GUIMyFrame1::any_figure_button4OnButtonClick( wxCommandEvent& event )
 {
-// TODO: Implement any_figure_button4OnButtonClick
+	if (drawingAFigureWithNSides) {
+		return;
+	}
+	if ((drawARectangle || drawALine) || drawACircle) {
+		drawARectangle = false;
+		drawACircle = false;
+		isBegin = false;
+		drawALine = false;
+	}
+	drawingAFigureWithNSides = true;
+	sidesLeft = number_of_sides;
+	weirdFigures.push_back({});
 }
 
 void GUIMyFrame1::figure_int_circle_button12OnButtonClick( wxCommandEvent& event )
@@ -137,6 +178,8 @@ void GUIMyFrame1::figure_sides_choice1OnChoice( wxCommandEvent& event )
 
 void GUIMyFrame1::line_color_button7OnButtonClick( wxCommandEvent& event )
 {
+	// do zmiany, bo na razie koloruje wszystko co było, jest i będzie narysowane
+	// ale myśle, że trzeba to pod sam koniec zmienić
 	wxColourDialog colourDialog(this);
 	if (colourDialog.ShowModal() == wxID_OK)
 		line_colour = colourDialog.GetColourData().GetColour();
@@ -145,6 +188,8 @@ void GUIMyFrame1::line_color_button7OnButtonClick( wxCommandEvent& event )
 
 void GUIMyFrame1::save_image_button8OnButtonClick( wxCommandEvent& event )
 {
+	// do zmiany na jsona, ale ja bym to zostawił na sam koniec, 
+	// bo jeszcze nie znamy dokładnej formy przetrzymywania punktów wszystkich figur
 	wxClientDC dcClient(m_panel1);
 	wxBufferedDC dcBuffer(&dcClient);
 
@@ -242,6 +287,13 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 		dcBuffer.DrawLine(*(itr->second), rightDown);
 	}
 
+	if (weirdFigures.size() > 0) {
+		for (unsigned i = 0; i < weirdFigures.size(); i++) {
+			for (unsigned j = 1; j < weirdFigures[i].size(); j++) {
+				dcBuffer.DrawLine(weirdFigures[i][j - 1], weirdFigures[i][j]);
+			}
+		}
+	}
 }
 
 GUIMyFrame1::~GUIMyFrame1() {

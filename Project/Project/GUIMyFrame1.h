@@ -68,7 +68,6 @@ class GUIMyFrame1 : public MyFrame1
 		wxImageHandler * image_handler;
 		wxFileDialog * _fileDialog;
 		int number_of_sides;
-		int numberOfFigures;	// zmienna informująca nas o tym ile jest figur stworzonych z pkt
 		std::vector<std::vector<wxPoint>> points;	// zbiór punktów
 		bool drawALine;	// ta zmienna jak jest true, to znaczy że rysujemy linie aktualnie
 		bool drawACircle;	// ta zmienna jak jest jest true to znaczy że rysujemy okrąg
@@ -77,6 +76,9 @@ class GUIMyFrame1 : public MyFrame1
 		bool isBegin;	// jest true w momencie gdy użytkownik kliknął i wybrał środek rysowanego okręgu
 		bool drawARectangle;	// jeśli jest true to rysujemy prostokąt
 		std::multimap<wxPoint *, wxPoint *> rectangles;		// mapa punktów, klucz jest pkt dolnym lewym, wartośc jest pkt górnym prawym
+		bool drawingAFigureWithNSides;	// jesli true to rysujemy te dziwne figury
+		int sidesLeft;	// zmienna informuje nas ile jeszcze zostało boków do narysowania ( dziwne figury )
+		std::vector<std::vector<wxPoint>> weirdFigures;	// zbiór dziwnych figur
 };
 
 #endif // __GUIMyFrame1__
