@@ -73,27 +73,25 @@ void GUIMyFrame1::panelOnMouseEvents(wxMouseEvent& event) {
 		circles.insert(std::make_pair(new wxPoint(begin), r));
 		x = begin.x;
 		y = begin.y;
-		figuresInCircles.push_back(wxPoint(x, y-r));
+		figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x, y-r));
 		for (int i = 1; i < number_of_sides; i++) {
 			double alfa = 2. * M_PI / number_of_sides * i;
 			if (alfa < M_PI/2.) 
-				figuresInCircles.push_back(wxPoint(x-sin(alfa)*r, y-cos(alfa)*r));
+				figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x-sin(alfa)*r, y-cos(alfa)*r));
 			else if (alfa == M_PI/2.) 
-				figuresInCircles.push_back(wxPoint(x-r, y));
+				figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x-r, y));
 			else if (alfa < M_PI) 
-				figuresInCircles.push_back(wxPoint(x-sin(M_PI - alfa)*r, y +cos(M_PI - alfa)*r));
+				figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x-sin(M_PI - alfa)*r, y +cos(M_PI - alfa)*r));
 			else if (alfa == M_PI) 
-				figuresInCircles.push_back(wxPoint(x, y+r));
+				figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x, y+r));
 			else if (alfa < 3/2.*M_PI) 
-				figuresInCircles.push_back(wxPoint(x + sin(alfa-M_PI)*r, y +cos(alfa-M_PI)*r));
+				figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x + sin(alfa-M_PI)*r, y +cos(alfa-M_PI)*r));
 			else if (alfa == 3 / 2.*M_PI) 
-				figuresInCircles.push_back(wxPoint(x+r, y));
+				figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x+r, y));
 			else if (alfa < 2.*M_PI) 
-				figuresInCircles.push_back(wxPoint(x +sin(2*M_PI-alfa)*r,y -cos(2 * M_PI - alfa)*r));
-			else {	// beta == 360.0
-			}
+				figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x +sin(2*M_PI-alfa)*r,y -cos(2 * M_PI - alfa)*r));
 		}
-		figuresInCircles.push_back(figuresInCircles[0]);
+		figuresInCircles[figuresInCircles.size() - 1].push_back(figuresInCircles[figuresInCircles.size() - 1][0]);
 		drawAFigureInCircle = false;
 		isBegin = false;
 	}
@@ -151,7 +149,7 @@ void GUIMyFrame1::draw_rectangle_buttonOnButtonClick(wxCommandEvent& event)
 	if (drawingAFigureWithNSides) {
 		return;
 	}
-	if (drawACircle || drawALine) {
+	if ((drawAFigureInCircle || drawALine) || drawACircle) {
 		drawACircle = false;
 		isBegin = false;
 		drawALine = false;
@@ -170,7 +168,7 @@ void GUIMyFrame1::draw_circle_buttonOnButtonClick(wxCommandEvent& event)
 	if (drawingAFigureWithNSides) {
 		return;
 	}
-	if (drawARectangle || drawALine) {
+	if ((drawARectangle || drawALine) || drawAFigureInCircle) {
 		drawARectangle = false;
 		isBegin = false;
 		drawALine = false;
@@ -189,7 +187,7 @@ void GUIMyFrame1::any_figure_button4OnButtonClick(wxCommandEvent& event)
 	if (drawingAFigureWithNSides) {
 		return;
 	}
-	if ((drawARectangle || drawALine) || drawACircle) {
+	if (((drawARectangle || drawALine) || drawACircle) || drawAFigureInCircle) {
 		drawARectangle = false;
 		drawACircle = false;
 		isBegin = false;
@@ -200,9 +198,25 @@ void GUIMyFrame1::any_figure_button4OnButtonClick(wxCommandEvent& event)
 	weirdFigures.push_back({});
 }
 
+// rysowanie figur wpisanych w okrąg
 void GUIMyFrame1::figure_int_circle_button12OnButtonClick(wxCommandEvent& event)
 {
-	drawAFigureInCircle = true;
+	if (drawingAFigureWithNSides) {
+		return;
+	}
+	if ((drawARectangle || drawALine) || drawACircle) {
+		drawARectangle = false;
+		isBegin = false;
+		drawALine = false;
+	}
+	if (!drawAFigureInCircle) {
+		drawAFigureInCircle = true;
+		figuresInCircles.push_back({});
+	}
+	else {
+		drawAFigureInCircle = false;
+		isBegin = false;
+	}
 }
 
 void GUIMyFrame1::filling_checkBox1OnCheckBox(wxCommandEvent& event)
@@ -314,8 +328,12 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 		}
 	}
 
-	for (unsigned i = 1; i < figuresInCircles.size(); i++) {
-		dcBuffer.DrawLine(figuresInCircles[i - 1], figuresInCircles[i]);
+	if (figuresInCircles.size() > 0) {
+		for (unsigned i = 0; i < figuresInCircles.size(); i++) {
+			for (unsigned j = 1; j < figuresInCircles[i].size(); j++) {
+				dcBuffer.DrawLine(figuresInCircles[i][j - 1], figuresInCircles[i][j]);
+			}
+		}
 	}
 
 	dcBuffer.SetBrush(wxBrush(*wxTRANSPARENT_BRUSH));

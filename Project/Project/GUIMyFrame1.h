@@ -80,7 +80,7 @@ private:
 	int sidesLeft;	// zmienna informuje nas ile jeszcze zostało boków do narysowania ( dziwne figury )
 	std::vector<std::vector<wxPoint>> weirdFigures;	// zbiór dziwnych figur
 	bool drawAFigureInCircle;	// jesli true to rysujemy figury wpisane w okrąg
-	std::vector<wxPoint> figuresInCircles;	// figury wpisane w okrąg
+	std::vector<std::vector<wxPoint>> figuresInCircles;	// figury wpisane w okrąg
 };
 
 #endif // __GUIMyFrame1__
