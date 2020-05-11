@@ -1,6 +1,6 @@
 ﻿#include "GUIMyFrame1.h"
 
-GUIMyFrame1::GUIMyFrame1( wxWindow* parent ): MyFrame1(nullptr), image_handler(new wxPNGHandler())
+GUIMyFrame1::GUIMyFrame1(wxWindow* parent) : MyFrame1(nullptr), image_handler(new wxPNGHandler())
 {
 	wxImage::AddHandler(image_handler);
 	_fileDialog = new wxFileDialog(this, _("Wybierz plik:"), _(""), _("result.jpg"), _(".jpg"), wxFD_SAVE);
@@ -10,6 +10,7 @@ GUIMyFrame1::GUIMyFrame1( wxWindow* parent ): MyFrame1(nullptr), image_handler(n
 	isBegin = false;
 	drawARectangle = false;
 	drawingAFigureWithNSides = false;
+	drawAFigureInCircle = false;
 	sidesLeft = 0;
 }
 
@@ -62,10 +63,49 @@ void GUIMyFrame1::panelOnMouseEvents(wxMouseEvent& event) {
 		begin = event.GetPosition();
 		isBegin = true;
 	}
-	
+
+	// rysowanie figury wpisanej w okrąg
+	else if ((event.LeftDown() && drawAFigureInCircle) && isBegin) {
+		wxPoint end = event.GetPosition();
+		float x = abs(begin.x - end.x);
+		float y = abs(begin.y - end.y);
+		float r = sqrt(pow(x, 2) + pow(y, 2));
+		circles.insert(std::make_pair(new wxPoint(begin), r));
+		x = begin.x;
+		y = begin.y;
+		figuresInCircles.push_back(wxPoint(x, y-r));
+		for (int i = 1; i < number_of_sides; i++) {
+			double alfa = 2. * M_PI / number_of_sides * i;
+			if (alfa < M_PI/2.) 
+				figuresInCircles.push_back(wxPoint(x-sin(alfa)*r, y-cos(alfa)*r));
+			else if (alfa == M_PI/2.) 
+				figuresInCircles.push_back(wxPoint(x-r, y));
+			else if (alfa < M_PI) 
+				figuresInCircles.push_back(wxPoint(x-sin(M_PI - alfa)*r, y +cos(M_PI - alfa)*r));
+			else if (alfa == M_PI) 
+				figuresInCircles.push_back(wxPoint(x, y+r));
+			else if (alfa < 3/2.*M_PI) 
+				figuresInCircles.push_back(wxPoint(x + sin(alfa-M_PI)*r, y +cos(alfa-M_PI)*r));
+			else if (alfa == 3 / 2.*M_PI) 
+				figuresInCircles.push_back(wxPoint(x+r, y));
+			else if (alfa < 2.*M_PI) 
+				figuresInCircles.push_back(wxPoint(x +sin(2*M_PI-alfa)*r,y -cos(2 * M_PI - alfa)*r));
+			else {	// beta == 360.0
+			}
+		}
+		figuresInCircles.push_back(figuresInCircles[0]);
+		drawAFigureInCircle = false;
+		isBegin = false;
+	}
+	// rysowanie okręgu też
+	else if (event.LeftDown() && drawAFigureInCircle) {
+		begin = event.GetPosition();
+		isBegin = true;
+	}
+
 }
 
-void GUIMyFrame1::m_panel1OnPaint( wxPaintEvent& event )
+void GUIMyFrame1::m_panel1OnPaint(wxPaintEvent& event)
 {
 	wxClientDC dcClient(m_panel1);
 	m_panel1->Refresh();
@@ -73,14 +113,14 @@ void GUIMyFrame1::m_panel1OnPaint( wxPaintEvent& event )
 	draw(dcClient);
 }
 
-void GUIMyFrame1::m_panel1OnUpdateUI( wxUpdateUIEvent& event )
+void GUIMyFrame1::m_panel1OnUpdateUI(wxUpdateUIEvent& event)
 {
 	wxClientDC dcClient(m_panel1);
 	draw(dcClient);
 }
 
 // rysowanie lini
-void GUIMyFrame1::draw_line_buttonOnButtonClick(wxCommandEvent& event )
+void GUIMyFrame1::draw_line_buttonOnButtonClick(wxCommandEvent& event)
 {
 	if (drawingAFigureWithNSides) {
 		return;
@@ -100,13 +140,13 @@ void GUIMyFrame1::draw_line_buttonOnButtonClick(wxCommandEvent& event )
 }
 
 // Krzywa beziera???
-void GUIMyFrame1::draw_curve_buttonOnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::draw_curve_buttonOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement draw_curve_buttonOnButtonClick
+	// TODO: Implement draw_curve_buttonOnButtonClick
 }
 
 // rysowanie prostokąta
-void GUIMyFrame1::draw_rectangle_buttonOnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::draw_rectangle_buttonOnButtonClick(wxCommandEvent& event)
 {
 	if (drawingAFigureWithNSides) {
 		return;
@@ -125,7 +165,7 @@ void GUIMyFrame1::draw_rectangle_buttonOnButtonClick( wxCommandEvent& event )
 }
 
 // rysowanie okręgu
-void GUIMyFrame1::draw_circle_buttonOnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::draw_circle_buttonOnButtonClick(wxCommandEvent& event)
 {
 	if (drawingAFigureWithNSides) {
 		return;
@@ -144,7 +184,7 @@ void GUIMyFrame1::draw_circle_buttonOnButtonClick( wxCommandEvent& event )
 }
 
 // rysowanie tych dziwnych figur
-void GUIMyFrame1::any_figure_button4OnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::any_figure_button4OnButtonClick(wxCommandEvent& event)
 {
 	if (drawingAFigureWithNSides) {
 		return;
@@ -160,23 +200,23 @@ void GUIMyFrame1::any_figure_button4OnButtonClick( wxCommandEvent& event )
 	weirdFigures.push_back({});
 }
 
-void GUIMyFrame1::figure_int_circle_button12OnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::figure_int_circle_button12OnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement figure_int_circle_button12OnButtonClick
+	drawAFigureInCircle = true;
 }
 
-void GUIMyFrame1::filling_checkBox1OnCheckBox( wxCommandEvent& event )
+void GUIMyFrame1::filling_checkBox1OnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement filling_checkBox1OnCheckBox
+	// TODO: Implement filling_checkBox1OnCheckBox
 }
 
-void GUIMyFrame1::figure_sides_choice1OnChoice( wxCommandEvent& event )
+void GUIMyFrame1::figure_sides_choice1OnChoice(wxCommandEvent& event)
 {
-// TODO: Implement figure_sides_choice1OnChoice
+	// TODO: Implement figure_sides_choice1OnChoice
 	number_of_sides = event.GetSelection() + 3;
 }
 
-void GUIMyFrame1::line_color_button7OnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::line_color_button7OnButtonClick(wxCommandEvent& event)
 {
 	// do zmiany, bo na razie koloruje wszystko co było, jest i będzie narysowane
 	// ale myśle, że trzeba to pod sam koniec zmienić
@@ -186,7 +226,7 @@ void GUIMyFrame1::line_color_button7OnButtonClick( wxCommandEvent& event )
 	Refresh();
 }
 
-void GUIMyFrame1::save_image_button8OnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::save_image_button8OnButtonClick(wxCommandEvent& event)
 {
 	// do zmiany na jsona, ale ja bym to zostawił na sam koniec, 
 	// bo jeszcze nie znamy dokładnej formy przetrzymywania punktów wszystkich figur
@@ -221,7 +261,7 @@ void GUIMyFrame1::save_image_button8OnButtonClick( wxCommandEvent& event )
 	Refresh();
 }
 
-void GUIMyFrame1::figure_color_filling_button10OnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::figure_color_filling_button10OnButtonClick(wxCommandEvent& event)
 {
 	wxColourDialog colourDialog(this);
 	if (colourDialog.ShowModal() == wxID_OK)
@@ -229,34 +269,34 @@ void GUIMyFrame1::figure_color_filling_button10OnButtonClick( wxCommandEvent& ev
 	Refresh();
 }
 
-void GUIMyFrame1::rotate_figure_button11OnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::rotate_figure_button11OnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement rotate_figure_button11OnButtonClick
+	// TODO: Implement rotate_figure_button11OnButtonClick
 }
 
-void GUIMyFrame1::move_figure_button12OnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::move_figure_button12OnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement move_figure_button12OnButtonClick
+	// TODO: Implement move_figure_button12OnButtonClick
 }
 
-void GUIMyFrame1::size_change_button13OnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::size_change_button13OnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement size_change_button13OnButtonClick
+	// TODO: Implement size_change_button13OnButtonClick
 }
 
-void GUIMyFrame1::load_image_button9OnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::load_image_button9OnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement load_image_button9OnButtonClick
+	// TODO: Implement load_image_button9OnButtonClick
 }
 
-void GUIMyFrame1::move_wierzcholek_button14OnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::move_wierzcholek_button14OnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement move_wierzcholek_button14OnButtonClick
+	// TODO: Implement move_wierzcholek_button14OnButtonClick
 }
 
-void GUIMyFrame1::delete_figure_button15OnButtonClick( wxCommandEvent& event )
+void GUIMyFrame1::delete_figure_button15OnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement delete_figure_button15OnButtonClick
+	// TODO: Implement delete_figure_button15OnButtonClick
 }
 
 void GUIMyFrame1::draw(wxClientDC & dcClient) {
@@ -272,6 +312,10 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 				dcBuffer.DrawLine(points[i][j - 1], points[i][j]);
 			}
 		}
+	}
+
+	for (unsigned i = 1; i < figuresInCircles.size(); i++) {
+		dcBuffer.DrawLine(figuresInCircles[i - 1], figuresInCircles[i]);
 	}
 
 	dcBuffer.SetBrush(wxBrush(*wxTRANSPARENT_BRUSH));
