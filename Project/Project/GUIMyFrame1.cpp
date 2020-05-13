@@ -12,7 +12,6 @@ GUIMyFrame1::GUIMyFrame1(wxWindow* parent) : MyFrame1(nullptr), image_handler(ne
 	drawingAFigureWithNSides = false;
 	drawAFigureInCircle = false;
 	sidesLeft = 0;
-	isItEnd = false;
 
 	m_panel1->Bind(wxEVT_LEFT_DOWN, &GUIMyFrame1::panelOnLeftDown, this);
 	m_panel1->Bind(wxEVT_LEFT_UP, &GUIMyFrame1::panelOnLeftUp, this);
@@ -24,7 +23,6 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 	// rysowanie krzywej beziera
 	if (drawingABezierCurve) {
 		wxPoint currentPoint = event.GetPosition();
-
 		for (std::vector<wxPoint>::iterator iterator = bezierCurve.begin(); iterator != bezierCurve.end(); iterator++)
 		{
 			if ((std::abs(iterator->x - currentPoint.x) + std::abs(iterator->y - currentPoint.y)) < 10)
@@ -42,6 +40,7 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 		}
 		m_panel1->Refresh();
 	}
+	// rysowanie linii
 	else if (event.LeftDown() && drawALine) {
 		wxPoint point = event.GetPosition();
 		points[points.size() - 1].push_back(wxPoint(point.x, point.y));
@@ -64,18 +63,11 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 		m_panel1->Refresh();
 	}
 	// rysowanie prostokąta
-	else if ((event.LeftDown() && drawARectangle) && isBegin) {
-		wxPoint end = event.GetPosition();
-		rectangles.insert(std::make_pair(new wxPoint(begin), new wxPoint(end)));
-		isBegin = false;
-		drawARectangle = false;
-	}
-	// rysowanie prostokąta też :)
 	else if (event.LeftDown() && drawARectangle) {
 		begin = event.GetPosition();
 		isBegin = true;
+		rectangles.insert(std::make_pair(new wxPoint(begin), new wxPoint(begin.x + 1, begin.y + 1)));
 	}
-
 	// rysowanie figury wpisanej w okrąg
 	else if ((event.LeftDown() && drawAFigureInCircle) && isBegin) {
 		wxPoint end = event.GetPosition();
@@ -119,9 +111,9 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 		m_panel1->Refresh();
 	}
 	else if (drawACircle) {
-		endOfCircle = event.GetPosition();
-		float x = abs(begin.x - endOfCircle.x);
-		float y = abs(begin.y - endOfCircle.y);
+		wxPoint endOfFigure = event.GetPosition();
+		float x = abs(begin.x - endOfFigure.x);
+		float y = abs(begin.y - endOfFigure.y);
 		float r = sqrt(pow(x, 2) + pow(y, 2));
 		std::multimap<wxPoint *, float>::iterator it = circles.begin();
 		while (it != circles.end()) {
@@ -132,8 +124,20 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 		}
 		it->second = r;
 		isBegin = false;
-		isItEnd = false;
 		drawACircle = false;
+		m_panel1->Refresh();
+	}
+	else if (drawARectangle) {
+		wxPoint endOfFigure = event.GetPosition();
+		std::multimap<wxPoint *, wxPoint *>::iterator it = rectangles.begin();
+		while (it != rectangles.end()) {
+			if (it->first->x == begin.x && it->first->y == begin.y) {
+				break;
+			}
+			it++;
+		}
+		it->second = new wxPoint(endOfFigure);
+		drawARectangle = false;
 		m_panel1->Refresh();
 	}
 }
@@ -147,9 +151,9 @@ void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
 		m_panel1->Refresh();
 	}
 	else if (drawACircle && event.LeftIsDown()) {
-		endOfCircle = event.GetPosition();
-		float x = abs(begin.x - endOfCircle.x);
-		float y = abs(begin.y - endOfCircle.y);
+		wxPoint endOfFigure = event.GetPosition();
+		float x = abs(begin.x - endOfFigure.x);
+		float y = abs(begin.y - endOfFigure.y);
 		float r = sqrt(pow(x, 2) + pow(y, 2));
 		std::multimap<wxPoint *, float>::iterator it = circles.begin();
 		while (it != circles.end()) {
@@ -159,11 +163,18 @@ void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
 			it++;
 		}
 		it->second = r;
-		if (isItEnd) {
-			isBegin = false;
-			isItEnd = false;
-			drawACircle = false;
+		m_panel1->Refresh();
+	}
+	else if (event.LeftDown() && drawARectangle) {
+		wxPoint endOfFigure = event.GetPosition();
+		std::multimap<wxPoint *, wxPoint *>::iterator it = rectangles.begin();
+		while (it != rectangles.end()) {
+			if (it->first->x == begin.x && it->first->y == begin.y) {
+				break;
+			}
+			it++;
 		}
+		it->second = new wxPoint(endOfFigure);
 		m_panel1->Refresh();
 	}
 }
@@ -437,10 +448,7 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 	for (auto itr = rectangles.begin(); itr != rectangles.end(); itr++) {
 		wxPoint leftUp = wxPoint(itr->first->x, itr->second->y);
 		wxPoint rightDown = wxPoint(itr->second->x, itr->first->y);
-		dcBuffer.DrawLine(*(itr->first), leftUp);
-		dcBuffer.DrawLine(*(itr->first), rightDown);
-		dcBuffer.DrawLine(*(itr->second), leftUp);
-		dcBuffer.DrawLine(*(itr->second), rightDown);
+		dcBuffer.DrawRectangle(wxRect(leftUp, rightDown));
 	}
 
 	if (weirdFigures.size() > 0) {
