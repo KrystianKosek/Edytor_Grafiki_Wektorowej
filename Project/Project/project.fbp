@@ -125,7 +125,7 @@
                                 <property name="window_style">wxTAB_TRAVERSAL</property>
                                 <event name="OnLeftDown">panelOnLeftDown</event>
                                 <event name="OnLeftUp">panelOnLeftUp</event>
-                                <event name="OnMouseEvents">panelOnMouseEvents</event>
+                                <event name="OnMotion">panelOnMotion</event>
                                 <event name="OnPaint">m_panel1OnPaint</event>
                                 <event name="OnUpdateUI">m_panel1OnUpdateUI</event>
                             </object>
