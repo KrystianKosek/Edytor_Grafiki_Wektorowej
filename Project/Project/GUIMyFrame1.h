@@ -78,6 +78,8 @@ private:
 	bool drawingABezierCurve;
 	std::vector<wxPoint> bezierCurve;	// vector z punktami, punkt odchylenia
 	std::vector<wxPoint>::iterator selected;	// aktualnie wybrany pkt poprzez wcisniecie lewego klawisza
+	wxPoint endOfCircle;
+	bool isItEnd;
 };
 
 #endif // __GUIMyFrame1__

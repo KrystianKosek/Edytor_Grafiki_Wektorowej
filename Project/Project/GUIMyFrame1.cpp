@@ -12,6 +12,7 @@ GUIMyFrame1::GUIMyFrame1(wxWindow* parent) : MyFrame1(nullptr), image_handler(ne
 	drawingAFigureWithNSides = false;
 	drawAFigureInCircle = false;
 	sidesLeft = 0;
+	isItEnd = false;
 
 	m_panel1->Bind(wxEVT_LEFT_DOWN, &GUIMyFrame1::panelOnLeftDown, this);
 	m_panel1->Bind(wxEVT_LEFT_UP, &GUIMyFrame1::panelOnLeftUp, this);
@@ -20,6 +21,7 @@ GUIMyFrame1::GUIMyFrame1(wxWindow* parent) : MyFrame1(nullptr), image_handler(ne
 }
 
 void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
+	// rysowanie krzywej beziera
 	if (drawingABezierCurve) {
 		wxPoint currentPoint = event.GetPosition();
 
@@ -55,19 +57,11 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 		}
 	}
 	// rysowanie okręgu
-	else if ((event.LeftDown() && drawACircle) && isBegin) {
-		wxPoint end = event.GetPosition();
-		float x = abs(begin.x - end.x);
-		float y = abs(begin.y - end.y);
-		float r = sqrt(pow(x, 2) + pow(y, 2));
-		circles.insert(std::make_pair(new wxPoint(begin), r));
-		drawACircle = false;
-		isBegin = false;
-	}
-	// rysowanie okręgu też
 	else if (event.LeftDown() && drawACircle) {
 		begin = event.GetPosition();
 		isBegin = true;
+		circles.insert({ new wxPoint(begin), 1 });
+		m_panel1->Refresh();
 	}
 	// rysowanie prostokąta
 	else if ((event.LeftDown() && drawARectangle) && isBegin) {
@@ -113,7 +107,7 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 		drawAFigureInCircle = false;
 		isBegin = false;
 	}
-	// rysowanie okręgu też
+	// rysowanie figury wpisanej w okrąg też
 	else if (event.LeftDown() && drawAFigureInCircle) {
 		begin = event.GetPosition();
 		isBegin = true;
@@ -124,6 +118,24 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 		selected = bezierCurve.end();
 		m_panel1->Refresh();
 	}
+	else if (drawACircle) {
+		endOfCircle = event.GetPosition();
+		float x = abs(begin.x - endOfCircle.x);
+		float y = abs(begin.y - endOfCircle.y);
+		float r = sqrt(pow(x, 2) + pow(y, 2));
+		std::multimap<wxPoint *, float>::iterator it = circles.begin();
+		while (it != circles.end()) {
+			if (it->first->x == begin.x && it->first->y == begin.y) {
+				break;
+			}
+			it++;
+		}
+		it->second = r;
+		isBegin = false;
+		isItEnd = false;
+		drawACircle = false;
+		m_panel1->Refresh();
+	}
 }
 
 void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
@@ -132,6 +144,26 @@ void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
 		wxPoint p = event.GetPosition();
 		selected->x = p.x;
 		selected->y = p.y;
+		m_panel1->Refresh();
+	}
+	else if (drawACircle && event.LeftIsDown()) {
+		endOfCircle = event.GetPosition();
+		float x = abs(begin.x - endOfCircle.x);
+		float y = abs(begin.y - endOfCircle.y);
+		float r = sqrt(pow(x, 2) + pow(y, 2));
+		std::multimap<wxPoint *, float>::iterator it = circles.begin();
+		while (it != circles.end()) {
+			if (it->first->x == begin.x && it->first->y == begin.y) {
+				break;
+			}
+			it++;
+		}
+		it->second = r;
+		if (isItEnd) {
+			isBegin = false;
+			isItEnd = false;
+			drawACircle = false;
+		}
 		m_panel1->Refresh();
 	}
 }
