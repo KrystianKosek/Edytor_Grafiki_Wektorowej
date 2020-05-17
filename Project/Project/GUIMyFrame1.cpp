@@ -43,15 +43,15 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 	// rysowanie linii
 	else if (event.LeftDown() && drawALine) {
 		wxPoint point = event.GetPosition();
-		points[points.size() - 1].push_back(wxPoint(point.x, point.y));
+		points[points.size() - 1].push_back({ wxPoint(point.x, point.y), line_colour});
 	}
 	// rysowanie tych dziwnych figur zlożonych z iluś tam boków
 	else if ((event.LeftDown() && sidesLeft > 0) && drawingAFigureWithNSides) {
 		sidesLeft--;
 		wxPoint point = event.GetPosition();
-		weirdFigures[weirdFigures.size() - 1].push_back(point);
+		weirdFigures[weirdFigures.size() - 1].push_back({ point, line_colour });
 		if (sidesLeft == 0) {
-			weirdFigures[weirdFigures.size() - 1].push_back(weirdFigures[weirdFigures.size() - 1][0]);
+			weirdFigures[weirdFigures.size() - 1].push_back({ weirdFigures[weirdFigures.size() - 1][0].first, line_colour });
 			drawingAFigureWithNSides = false;
 		}
 	}
@@ -59,14 +59,14 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 	else if (event.LeftDown() && drawACircle) {
 		begin = event.GetPosition();
 		isBegin = true;
-		circles.insert({ new wxPoint(begin), 1 });
+		circles.insert({ new wxPoint(begin), {1, line_colour} });
 		m_panel1->Refresh();
 	}
 	// rysowanie prostokąta
 	else if (event.LeftDown() && drawARectangle) {
 		begin = event.GetPosition();
 		isBegin = true;
-		rectangles.insert(std::make_pair(new wxPoint(begin), new wxPoint(begin.x + 1, begin.y + 1)));
+		rectangles.push_back({ { new wxPoint(begin), new wxPoint(begin.x + 1, begin.y + 1) }, line_colour});
 	}
 	// rysowanie figury wpisanej w okrąg
 	else if (event.LeftDown() && drawAFigureInCircle) {
@@ -75,27 +75,27 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 		float x = abs(begin.x - end.x);
 		float y = abs(begin.y - end.y);
 		float r = sqrt(pow(x, 2) + pow(y, 2));
-		circles.insert({ new wxPoint(begin), r });
+		circles.insert({ new wxPoint(begin), {r, line_colour} });
 		isBegin = true;
 		x = begin.x;
 		y = begin.y;
-		figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x, y - r));
+		figuresInCircles[figuresInCircles.size() - 1].push_back({ wxPoint(x, y - r), line_colour });
 		for (int i = 1; i < number_of_sides; i++) {
 			double alfa = 2. * M_PI / number_of_sides * i;
 			if (alfa < M_PI / 2.)
-				figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x - sin(alfa)*r, y - cos(alfa)*r));
+				figuresInCircles[figuresInCircles.size() - 1].push_back({ wxPoint(x - sin(alfa)*r, y - cos(alfa)*r), line_colour });
 			else if (alfa == M_PI / 2.)
-				figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x - r, y));
+				figuresInCircles[figuresInCircles.size() - 1].push_back({ wxPoint(x - r, y), line_colour });
 			else if (alfa < M_PI)
-				figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x - sin(M_PI - alfa)*r, y + cos(M_PI - alfa)*r));
+				figuresInCircles[figuresInCircles.size() - 1].push_back({ wxPoint(x - sin(M_PI - alfa)*r, y + cos(M_PI - alfa)*r), line_colour });
 			else if (alfa == M_PI)
-				figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x, y + r));
+				figuresInCircles[figuresInCircles.size() - 1].push_back({ wxPoint(x, y + r), line_colour });
 			else if (alfa < 3 / 2.*M_PI)
-				figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x + sin(alfa - M_PI)*r, y + cos(alfa - M_PI)*r));
+				figuresInCircles[figuresInCircles.size() - 1].push_back({ wxPoint(x + sin(alfa - M_PI)*r, y + cos(alfa - M_PI)*r), line_colour });
 			else if (alfa == 3 / 2.*M_PI)
-				figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x + r, y));
+				figuresInCircles[figuresInCircles.size() - 1].push_back({ wxPoint(x + r, y), line_colour });
 			else if (alfa < 2.*M_PI)
-				figuresInCircles[figuresInCircles.size() - 1].push_back(wxPoint(x + sin(2 * M_PI - alfa)*r, y - cos(2 * M_PI - alfa)*r));
+				figuresInCircles[figuresInCircles.size() - 1].push_back({ wxPoint(x + sin(2 * M_PI - alfa)*r, y - cos(2 * M_PI - alfa)*r), line_colour });
 		}
 		figuresInCircles[figuresInCircles.size() - 1].push_back(figuresInCircles[figuresInCircles.size() - 1][0]);
 
@@ -114,14 +114,14 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 		float x = abs(begin.x - endOfFigure.x);
 		float y = abs(begin.y - endOfFigure.y);
 		float r = sqrt(pow(x, 2) + pow(y, 2));
-		std::multimap<wxPoint *, float>::iterator it = circles.begin();
+		std::multimap<wxPoint *, std::pair<float, wxColour>>::iterator it = circles.begin();
 		while (it != circles.end()) {
 			if (it->first->x == begin.x && it->first->y == begin.y) {
 				break;
 			}
 			it++;
 		}
-		it->second = r;
+		it->second.first = r;
 		isBegin = false;
 		drawACircle = false;
 		m_panel1->Refresh();
@@ -129,14 +129,14 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 	// rysowanie prostokąta
 	else if (drawARectangle) {
 		wxPoint endOfFigure = event.GetPosition();
-		std::multimap<wxPoint *, wxPoint *>::iterator it = rectangles.begin();
+		std::list<std::pair<std::pair<wxPoint *, wxPoint *>, wxColour>>::iterator it = rectangles.begin();
 		while (it != rectangles.end()) {
-			if (it->first->x == begin.x && it->first->y == begin.y) {
+			if (it->first.first->x == begin.x && it->first.first->y == begin.y) {
 				break;
 			}
 			it++;
 		}
-		it->second = new wxPoint(endOfFigure);
+		it->first.second = new wxPoint(endOfFigure);
 		drawARectangle = false;
 		m_panel1->Refresh();
 	}
@@ -146,33 +146,34 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 		float x = abs(begin.x - end.x);
 		float y = abs(begin.y - end.y);
 		float r = sqrt(pow(x, 2) + pow(y, 2));
-		std::multimap<wxPoint *, float>::iterator it = circles.begin();
+		std::multimap<wxPoint *, std::pair<float, wxColour>>::iterator it = circles.begin();
 		while (it != circles.end()) {
 			if (it->first->x == begin.x && it->first->y == begin.y) {
 				break;
 			}
 			it++;
 		}
-		it->second = r;
+		it->second.first = r;
 		x = begin.x;
 		y = begin.y;
-		figuresInCircles[figuresInCircles.size() - 1][0] = wxPoint(x, y - r);
+		figuresInCircles[figuresInCircles.size() - 1][0].first = wxPoint(x, y - r);
+
 		for (int i = 1; i < number_of_sides; i++) {
 			double alfa = 2. * M_PI / number_of_sides * i;
 			if (alfa < M_PI / 2.)
-				figuresInCircles[figuresInCircles.size() - 1][i] = wxPoint(x - sin(alfa)*r, y - cos(alfa)*r);
+				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x - sin(alfa)*r, y - cos(alfa)*r);
 			else if (alfa == M_PI / 2.)
-				figuresInCircles[figuresInCircles.size() - 1][i] = wxPoint(x - r, y);
+				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x - r, y);
 			else if (alfa < M_PI)
-				figuresInCircles[figuresInCircles.size() - 1][i] = wxPoint(x - sin(M_PI - alfa)*r, y + cos(M_PI - alfa)*r);
+				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x - sin(M_PI - alfa)*r, y + cos(M_PI - alfa)*r);
 			else if (alfa == M_PI)
-				figuresInCircles[figuresInCircles.size() - 1][i] = wxPoint(x, y + r);
+				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x, y + r);
 			else if (alfa < 3 / 2.*M_PI)
-				figuresInCircles[figuresInCircles.size() - 1][i] = wxPoint(x + sin(alfa - M_PI)*r, y + cos(alfa - M_PI)*r);
+				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x + sin(alfa - M_PI)*r, y + cos(alfa - M_PI)*r);
 			else if (alfa == 3 / 2.*M_PI)
-				figuresInCircles[figuresInCircles.size() - 1][i] = wxPoint(x + r, y);
+				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x + r, y);
 			else if (alfa < 2.*M_PI)
-				figuresInCircles[figuresInCircles.size() - 1][i] = wxPoint(x + sin(2 * M_PI - alfa)*r, y - cos(2 * M_PI - alfa)*r);
+				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x + sin(2 * M_PI - alfa)*r, y - cos(2 * M_PI - alfa)*r);
 		}
 		figuresInCircles[figuresInCircles.size() - 1][figuresInCircles[figuresInCircles.size() - 1].size() - 1] = figuresInCircles[figuresInCircles.size() - 1][0];
 		drawAFigureInCircle = false;
@@ -195,27 +196,27 @@ void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
 		float x = abs(begin.x - endOfFigure.x);
 		float y = abs(begin.y - endOfFigure.y);
 		float r = sqrt(pow(x, 2) + pow(y, 2));
-		std::multimap<wxPoint *, float>::iterator it = circles.begin();
+		std::multimap<wxPoint *, std::pair<float, wxColour>>::iterator it = circles.begin();
 		while (it != circles.end()) {
 			if (it->first->x == begin.x && it->first->y == begin.y) {
 				break;
 			}
 			it++;
 		}
-		it->second = r;
+		it->second.first = r;
 		m_panel1->Refresh();
 	}
 	// rysowanie prostokąta
 	else if (event.LeftIsDown() && drawARectangle) {
 		wxPoint endOfFigure = event.GetPosition();
-		std::multimap<wxPoint *, wxPoint *>::iterator it = rectangles.begin();
+		std::list<std::pair<std::pair<wxPoint *, wxPoint *>, wxColour>>::iterator it = rectangles.begin();
 		while (it != rectangles.end()) {
-			if (it->first->x == begin.x && it->first->y == begin.y) {
+			if (it->first.first->x == begin.x && it->first.first->y == begin.y) {
 				break;
 			}
 			it++;
 		}
-		it->second = new wxPoint(endOfFigure);
+		it->first.second = new wxPoint(endOfFigure);
 		m_panel1->Refresh();
 	}
 	// rysowanie figury wpisanej w okrąg
@@ -224,33 +225,33 @@ void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
 		float x = abs(begin.x - end.x);
 		float y = abs(begin.y - end.y);
 		float r = sqrt(pow(x, 2) + pow(y, 2));
-		std::multimap<wxPoint *, float>::iterator it = circles.begin();
+		std::multimap<wxPoint *, std::pair<float, wxColour>>::iterator it = circles.begin();
 		while (it != circles.end()) {
 			if (it->first->x == begin.x && it->first->y == begin.y) {
 				break;
 			}
 			it++;
 		}
-		it->second = r;
+		it->second.first = r;
 		x = begin.x;
 		y = begin.y;
-		figuresInCircles[figuresInCircles.size() - 1][0] = wxPoint(x, y - r);
+		figuresInCircles[figuresInCircles.size() - 1][0].first = wxPoint(x, y - r);
 		for (int i = 1; i < number_of_sides; i++) {
 			double alfa = 2. * M_PI / number_of_sides * i;
 			if (alfa < M_PI / 2.)
-				figuresInCircles[figuresInCircles.size() - 1][i] = wxPoint(x - sin(alfa)*r, y - cos(alfa)*r);
+				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x - sin(alfa)*r, y - cos(alfa)*r);
 			else if (alfa == M_PI / 2.)
-				figuresInCircles[figuresInCircles.size() - 1][i] = wxPoint(x - r, y);
+				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x - r, y);
 			else if (alfa < M_PI)
-				figuresInCircles[figuresInCircles.size() - 1][i] = wxPoint(x - sin(M_PI - alfa)*r, y + cos(M_PI - alfa)*r);
+				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x - sin(M_PI - alfa)*r, y + cos(M_PI - alfa)*r);
 			else if (alfa == M_PI)
-				figuresInCircles[figuresInCircles.size() - 1][i] = wxPoint(x, y + r);
+				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x, y + r);
 			else if (alfa < 3 / 2.*M_PI)
-				figuresInCircles[figuresInCircles.size() - 1][i] = wxPoint(x + sin(alfa - M_PI)*r, y + cos(alfa - M_PI)*r);
+				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x + sin(alfa - M_PI)*r, y + cos(alfa - M_PI)*r);
 			else if (alfa == 3 / 2.*M_PI)
-				figuresInCircles[figuresInCircles.size() - 1][i] = wxPoint(x + r, y);
+				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x + r, y);
 			else if (alfa < 2.*M_PI)
-				figuresInCircles[figuresInCircles.size() - 1][i] = wxPoint(x + sin(2 * M_PI - alfa)*r, y - cos(2 * M_PI - alfa)*r);
+				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x + sin(2 * M_PI - alfa)*r, y - cos(2 * M_PI - alfa)*r);
 		}
 		figuresInCircles[figuresInCircles.size() - 1][figuresInCircles[figuresInCircles.size() - 1].size() - 1] = figuresInCircles[figuresInCircles.size() - 1][0];
 
@@ -506,8 +507,13 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 	// rysowanie prostych
 	if (points.size() > 0) {
 		for (unsigned i = 0; i < points.size(); i++) {
-			for (unsigned j = 1; j < points[i].size(); j++) {
-				dcBuffer.DrawLine(points[i][j - 1], points[i][j]);
+			for (auto itr = points[i].begin(); itr != points[i].end(); itr++) {
+				dcBuffer.SetPen(wxPen(wxColor(itr->second), 1));
+				auto tmp = itr;
+				if (tmp != points[i].begin()) {
+					--tmp;
+					dcBuffer.DrawLine((tmp->first), (itr->first));
+				}
 			}
 		}
 	}
@@ -515,26 +521,30 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 	if (figuresInCircles.size() > 0) {
 		for (unsigned i = 0; i < figuresInCircles.size(); i++) {
 			for (unsigned j = 1; j < figuresInCircles[i].size(); j++) {
-				dcBuffer.DrawLine(figuresInCircles[i][j - 1], figuresInCircles[i][j]);
+				dcBuffer.SetPen(wxPen(wxColor(figuresInCircles[i][j - 1].second), 1));
+				dcBuffer.DrawLine(figuresInCircles[i][j - 1].first, figuresInCircles[i][j].first);
 			}
 		}
 	}
 	// rysowanie okręgów
 	dcBuffer.SetBrush(wxBrush(*wxTRANSPARENT_BRUSH));
 	for (auto itr = circles.begin(); itr != circles.end(); itr++) {
-		dcBuffer.DrawCircle(*(itr->first), itr->second);
+		dcBuffer.SetPen(wxPen(wxColor(itr->second.second), 1));
+		dcBuffer.DrawCircle(*(itr->first), itr->second.first);
 	}
 	// rysowanie prostokątów
 	for (auto itr = rectangles.begin(); itr != rectangles.end(); itr++) {
-		wxPoint leftUp = wxPoint(itr->first->x, itr->second->y);
-		wxPoint rightDown = wxPoint(itr->second->x, itr->first->y);
+		dcBuffer.SetPen(wxPen(wxColor(itr->second), 1));
+		wxPoint leftUp = wxPoint(itr->first.first->x, itr->first.second->y);
+		wxPoint rightDown = wxPoint(itr->first.second->x, itr->first.first->y);
 		dcBuffer.DrawRectangle(wxRect(leftUp, rightDown));
 	}
 	// rysowanie tych dziwnych figur
 	if (weirdFigures.size() > 0) {
 		for (unsigned i = 0; i < weirdFigures.size(); i++) {
 			for (unsigned j = 1; j < weirdFigures[i].size(); j++) {
-				dcBuffer.DrawLine(weirdFigures[i][j - 1], weirdFigures[i][j]);
+				dcBuffer.SetPen(wxPen(wxColor(weirdFigures[i][j - 1].second), 1));
+				dcBuffer.DrawLine(weirdFigures[i][j - 1].first, weirdFigures[i][j].first);
 			}
 		}
 	}
