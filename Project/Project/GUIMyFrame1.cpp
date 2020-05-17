@@ -37,6 +37,7 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 			selected = bezierCurve.end();
 			selected--;
 			bezierCurve.push_back(currentPoint);
+			bezierCurveColor = line_colour;
 		}
 		m_panel1->Refresh();
 	}
@@ -551,6 +552,7 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 	// rysowanie krzywych beziera
 	if (bezierCurve.size() > 2)
 	{
+		dcBuffer.SetPen(wxPen(wxColor(bezierCurveColor), 1));
 		dcBuffer.DrawSpline(bezierCurve.size(), &(bezierCurve[0]));
 	}
 	for (std::vector<wxPoint>::iterator iterator = bezierCurve.begin(); iterator != bezierCurve.end(); iterator++)
