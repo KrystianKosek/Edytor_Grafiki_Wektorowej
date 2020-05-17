@@ -43,7 +43,7 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 	// rysowanie linii
 	else if (event.LeftDown() && drawALine) {
 		wxPoint point = event.GetPosition();
-		points[points.size() - 1].push_back(wxPoint(point.x, point.y));
+		points[points.size() - 1].push_back({ wxPoint(point.x, point.y), line_colour});
 	}
 	// rysowanie tych dziwnych figur zlożonych z iluś tam boków
 	else if ((event.LeftDown() && sidesLeft > 0) && drawingAFigureWithNSides) {
@@ -506,8 +506,13 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 	// rysowanie prostych
 	if (points.size() > 0) {
 		for (unsigned i = 0; i < points.size(); i++) {
-			for (unsigned j = 1; j < points[i].size(); j++) {
-				dcBuffer.DrawLine(points[i][j - 1], points[i][j]);
+			for (auto itr = points[i].begin(); itr != points[i].end(); itr++) {
+				dcBuffer.SetPen(wxPen(wxColor(itr->second), 1));
+				auto tmp = itr;
+				if (tmp != points[i].begin()) {
+					--tmp;
+					dcBuffer.DrawLine((tmp->first), (itr->first));
+				}
 			}
 		}
 	}
