@@ -59,7 +59,7 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 	else if (event.LeftDown() && drawACircle) {
 		begin = event.GetPosition();
 		isBegin = true;
-		circles.insert({ new wxPoint(begin), 1 });
+		circles.insert({ new wxPoint(begin), {1, line_colour} });
 		m_panel1->Refresh();
 	}
 	// rysowanie prostokąta
@@ -75,7 +75,7 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 		float x = abs(begin.x - end.x);
 		float y = abs(begin.y - end.y);
 		float r = sqrt(pow(x, 2) + pow(y, 2));
-		circles.insert({ new wxPoint(begin), r });
+		circles.insert({ new wxPoint(begin), {r, line_colour} });
 		isBegin = true;
 		x = begin.x;
 		y = begin.y;
@@ -114,14 +114,14 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 		float x = abs(begin.x - endOfFigure.x);
 		float y = abs(begin.y - endOfFigure.y);
 		float r = sqrt(pow(x, 2) + pow(y, 2));
-		std::multimap<wxPoint *, float>::iterator it = circles.begin();
+		std::multimap<wxPoint *, std::pair<float, wxColour>>::iterator it = circles.begin();
 		while (it != circles.end()) {
 			if (it->first->x == begin.x && it->first->y == begin.y) {
 				break;
 			}
 			it++;
 		}
-		it->second = r;
+		it->second.first = r;
 		isBegin = false;
 		drawACircle = false;
 		m_panel1->Refresh();
@@ -146,14 +146,14 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 		float x = abs(begin.x - end.x);
 		float y = abs(begin.y - end.y);
 		float r = sqrt(pow(x, 2) + pow(y, 2));
-		std::multimap<wxPoint *, float>::iterator it = circles.begin();
+		std::multimap<wxPoint *, std::pair<float, wxColour>>::iterator it = circles.begin();
 		while (it != circles.end()) {
 			if (it->first->x == begin.x && it->first->y == begin.y) {
 				break;
 			}
 			it++;
 		}
-		it->second = r;
+		it->second.first = r;
 		x = begin.x;
 		y = begin.y;
 		figuresInCircles[figuresInCircles.size() - 1][0] = wxPoint(x, y - r);
@@ -195,14 +195,14 @@ void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
 		float x = abs(begin.x - endOfFigure.x);
 		float y = abs(begin.y - endOfFigure.y);
 		float r = sqrt(pow(x, 2) + pow(y, 2));
-		std::multimap<wxPoint *, float>::iterator it = circles.begin();
+		std::multimap<wxPoint *, std::pair<float, wxColour>>::iterator it = circles.begin();
 		while (it != circles.end()) {
 			if (it->first->x == begin.x && it->first->y == begin.y) {
 				break;
 			}
 			it++;
 		}
-		it->second = r;
+		it->second.first = r;
 		m_panel1->Refresh();
 	}
 	// rysowanie prostokąta
@@ -224,14 +224,14 @@ void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
 		float x = abs(begin.x - end.x);
 		float y = abs(begin.y - end.y);
 		float r = sqrt(pow(x, 2) + pow(y, 2));
-		std::multimap<wxPoint *, float>::iterator it = circles.begin();
+		std::multimap<wxPoint *, std::pair<float, wxColour>>::iterator it = circles.begin();
 		while (it != circles.end()) {
 			if (it->first->x == begin.x && it->first->y == begin.y) {
 				break;
 			}
 			it++;
 		}
-		it->second = r;
+		it->second.first = r;
 		x = begin.x;
 		y = begin.y;
 		figuresInCircles[figuresInCircles.size() - 1][0] = wxPoint(x, y - r);
@@ -527,7 +527,8 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 	// rysowanie okręgów
 	dcBuffer.SetBrush(wxBrush(*wxTRANSPARENT_BRUSH));
 	for (auto itr = circles.begin(); itr != circles.end(); itr++) {
-		dcBuffer.DrawCircle(*(itr->first), itr->second);
+		dcBuffer.SetPen(wxPen(wxColor(itr->second.second), 1));
+		dcBuffer.DrawCircle(*(itr->first), itr->second.first);
 	}
 	// rysowanie prostokątów
 	for (auto itr = rectangles.begin(); itr != rectangles.end(); itr++) {

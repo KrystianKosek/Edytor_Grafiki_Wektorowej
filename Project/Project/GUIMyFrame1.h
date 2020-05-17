@@ -66,7 +66,7 @@ private:
 	std::vector<std::list<std::pair<wxPoint, wxColour>>> points;
 	bool drawALine;	// ta zmienna jak jest true, to znaczy że rysujemy linie aktualnie
 	bool drawACircle;	// ta zmienna jak jest jest true to znaczy że rysujemy okrąg
-	std::multimap<wxPoint *, float> circles;	// mapa punktów, klucz jest środkiem okręgu, wartość to prmień
+	std::multimap<wxPoint *, std::pair<float, wxColour>> circles;	// mapa punktów, klucz jest środkiem okręgu, wartość to prmień
 	wxPoint begin;	// punkt startowy używany do rysowania okregów ( środek okręgu )
 	bool isBegin;	// jest true w momencie gdy użytkownik kliknął i wybrał środek rysowanego okręgu
 	bool drawARectangle;	// jeśli jest true to rysujemy prostokąt
