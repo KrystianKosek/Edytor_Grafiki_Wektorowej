@@ -49,9 +49,9 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 	else if ((event.LeftDown() && sidesLeft > 0) && drawingAFigureWithNSides) {
 		sidesLeft--;
 		wxPoint point = event.GetPosition();
-		weirdFigures[weirdFigures.size() - 1].push_back(point);
+		weirdFigures[weirdFigures.size() - 1].push_back({ point, line_colour });
 		if (sidesLeft == 0) {
-			weirdFigures[weirdFigures.size() - 1].push_back(weirdFigures[weirdFigures.size() - 1][0]);
+			weirdFigures[weirdFigures.size() - 1].push_back({ weirdFigures[weirdFigures.size() - 1][0].first, line_colour });
 			drawingAFigureWithNSides = false;
 		}
 	}
@@ -541,7 +541,8 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 	if (weirdFigures.size() > 0) {
 		for (unsigned i = 0; i < weirdFigures.size(); i++) {
 			for (unsigned j = 1; j < weirdFigures[i].size(); j++) {
-				dcBuffer.DrawLine(weirdFigures[i][j - 1], weirdFigures[i][j]);
+				dcBuffer.SetPen(wxPen(wxColor(weirdFigures[i][j - 1].second), 1));
+				dcBuffer.DrawLine(weirdFigures[i][j - 1].first, weirdFigures[i][j].first);
 			}
 		}
 	}

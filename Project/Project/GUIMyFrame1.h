@@ -74,7 +74,7 @@ private:
 	std::list<std::pair<std::pair<wxPoint *, wxPoint *>, wxColour>> rectangles;
 	bool drawingAFigureWithNSides;	// jesli true to rysujemy te dziwne figury
 	int sidesLeft;	// zmienna informuje nas ile jeszcze zostało boków do narysowania ( dziwne figury )
-	std::vector<std::vector<wxPoint>> weirdFigures;	// zbiór dziwnych figur
+	std::vector<std::vector<std::pair<wxPoint, wxColour>>> weirdFigures;	// zbiór dziwnych figur
 	bool drawAFigureInCircle;	// jesli true to rysujemy figury wpisane w okrąg
 	std::vector<std::vector<wxPoint>> figuresInCircles;	// figury wpisane w okrąg
 	bool drawingABezierCurve;
