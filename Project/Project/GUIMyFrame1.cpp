@@ -66,7 +66,7 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 	else if (event.LeftDown() && drawARectangle) {
 		begin = event.GetPosition();
 		isBegin = true;
-		rectangles.insert(std::make_pair(new wxPoint(begin), new wxPoint(begin.x + 1, begin.y + 1)));
+		rectangles.push_back({ { new wxPoint(begin), new wxPoint(begin.x + 1, begin.y + 1) }, line_colour});
 	}
 	// rysowanie figury wpisanej w okrąg
 	else if (event.LeftDown() && drawAFigureInCircle) {
@@ -129,14 +129,14 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 	// rysowanie prostokąta
 	else if (drawARectangle) {
 		wxPoint endOfFigure = event.GetPosition();
-		std::multimap<wxPoint *, wxPoint *>::iterator it = rectangles.begin();
+		std::list<std::pair<std::pair<wxPoint *, wxPoint *>, wxColour>>::iterator it = rectangles.begin();
 		while (it != rectangles.end()) {
-			if (it->first->x == begin.x && it->first->y == begin.y) {
+			if (it->first.first->x == begin.x && it->first.first->y == begin.y) {
 				break;
 			}
 			it++;
 		}
-		it->second = new wxPoint(endOfFigure);
+		it->first.second = new wxPoint(endOfFigure);
 		drawARectangle = false;
 		m_panel1->Refresh();
 	}
@@ -208,14 +208,14 @@ void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
 	// rysowanie prostokąta
 	else if (event.LeftIsDown() && drawARectangle) {
 		wxPoint endOfFigure = event.GetPosition();
-		std::multimap<wxPoint *, wxPoint *>::iterator it = rectangles.begin();
+		std::list<std::pair<std::pair<wxPoint *, wxPoint *>, wxColour>>::iterator it = rectangles.begin();
 		while (it != rectangles.end()) {
-			if (it->first->x == begin.x && it->first->y == begin.y) {
+			if (it->first.first->x == begin.x && it->first.first->y == begin.y) {
 				break;
 			}
 			it++;
 		}
-		it->second = new wxPoint(endOfFigure);
+		it->first.second = new wxPoint(endOfFigure);
 		m_panel1->Refresh();
 	}
 	// rysowanie figury wpisanej w okrąg
@@ -532,8 +532,9 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 	}
 	// rysowanie prostokątów
 	for (auto itr = rectangles.begin(); itr != rectangles.end(); itr++) {
-		wxPoint leftUp = wxPoint(itr->first->x, itr->second->y);
-		wxPoint rightDown = wxPoint(itr->second->x, itr->first->y);
+		dcBuffer.SetPen(wxPen(wxColor(itr->second), 1));
+		wxPoint leftUp = wxPoint(itr->first.first->x, itr->first.second->y);
+		wxPoint rightDown = wxPoint(itr->first.second->x, itr->first.first->y);
 		dcBuffer.DrawRectangle(wxRect(leftUp, rightDown));
 	}
 	// rysowanie tych dziwnych figur

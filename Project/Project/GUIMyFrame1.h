@@ -70,7 +70,8 @@ private:
 	wxPoint begin;	// punkt startowy używany do rysowania okregów ( środek okręgu )
 	bool isBegin;	// jest true w momencie gdy użytkownik kliknął i wybrał środek rysowanego okręgu
 	bool drawARectangle;	// jeśli jest true to rysujemy prostokąt
-	std::multimap<wxPoint *, wxPoint *> rectangles;		// mapa punktów, klucz jest pkt dolnym lewym, wartośc jest pkt górnym prawym
+	//std::multimap<wxPoint *, wxPoint *> rectangles;		// mapa punktów, klucz jest pkt dolnym lewym, wartośc jest pkt górnym prawym
+	std::list<std::pair<std::pair<wxPoint *, wxPoint *>, wxColour>> rectangles;
 	bool drawingAFigureWithNSides;	// jesli true to rysujemy te dziwne figury
 	int sidesLeft;	// zmienna informuje nas ile jeszcze zostało boków do narysowania ( dziwne figury )
 	std::vector<std::vector<wxPoint>> weirdFigures;	// zbiór dziwnych figur
