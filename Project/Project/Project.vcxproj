@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\wxWidgets-3.04\include\msvc;D:\wxWidgets-3.04\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Adrian Góral\Desktop\Grafika Komputerowa\Project\Edytor_Grafiki_Wektorowej\Project\Project\include;D:\wxWidgets-3.04\include\msvc;D:\wxWidgets-3.04\include;$(IncludePath)</IncludePath>
     <LibraryPath>D:\wxWidgets-3.04\lib\vc_lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\wxWidgets-3.04\include\msvc;C:\wxWidgets-3.04\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Adrian Góral\Desktop\Grafika Komputerowa\Project\Edytor_Grafiki_Wektorowej\Project\Project\include;C:\wxWidgets-3.04\include\msvc;C:\wxWidgets-3.04\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\wxWidgets-3.04\lib\vc_lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
