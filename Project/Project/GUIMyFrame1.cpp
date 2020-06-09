@@ -48,13 +48,18 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 		points[points.size() - 1].push_back({ wxPoint(point.x, point.y), line_colour});
 	}
 	// rysowanie tych dziwnych figur zlożonych z iluś tam boków
-	else if ((event.LeftDown() && sidesLeft > 0) && drawingAFigureWithNSides) {
+	else if (event.LeftDown() && drawingAFigureWithNSides) {
+		if (sidesLeft == 0)
+			sidesLeft = number_of_sides;
+		if (sidesLeft == number_of_sides)
+			weirdFigures.push_back({});
 		sidesLeft--;
 		wxPoint point = event.GetPosition();
 		weirdFigures[weirdFigures.size() - 1].push_back({ point, line_colour });
 		if (sidesLeft == 0) {
 			weirdFigures[weirdFigures.size() - 1].push_back({ weirdFigures[weirdFigures.size() - 1][0].first, line_colour });
-			drawingAFigureWithNSides = false;
+			//weirdFigures.push_back({});
+			//drawingAFigureWithNSides = false;
 		}
 	}
 	// rysowanie okręgu
@@ -72,6 +77,7 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 	}
 	// rysowanie figury wpisanej w okrąg
 	else if (event.LeftDown() && drawAFigureInCircle) {
+		figuresInCircles.push_back({});
 		begin = event.GetPosition();
 		wxPoint end = wxPoint(begin.x + 1, begin.y + 1);
 		float x = abs(begin.x - end.x);
@@ -124,8 +130,7 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 			it++;
 		}
 		it->second.first = r;
-		isBegin = false;
-		drawACircle = false;
+		
 		m_panel1->Refresh();
 	}
 	// rysowanie prostokąta
@@ -139,7 +144,7 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 			it++;
 		}
 		it->first.second = new wxPoint(endOfFigure);
-		drawARectangle = false;
+		isBegin = false;
 		m_panel1->Refresh();
 	}
 	// rysowanie figury wpisanej w okrąg
@@ -178,7 +183,7 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x + sin(2 * M_PI - alfa)*r, y - cos(2 * M_PI - alfa)*r);
 		}
 		figuresInCircles[figuresInCircles.size() - 1][figuresInCircles[figuresInCircles.size() - 1].size() - 1] = figuresInCircles[figuresInCircles.size() - 1][0];
-		drawAFigureInCircle = false;
+		//drawAFigureInCircle = false;
 		m_panel1->Refresh();
 	}
 }
@@ -280,17 +285,16 @@ void GUIMyFrame1::m_panel1OnUpdateUI(wxUpdateUIEvent& event)
 // rysowanie lini
 void GUIMyFrame1::draw_line_buttonOnButtonClick(wxCommandEvent& event)
 {
-	if (drawingAFigureWithNSides) {
-		return;
-	}
-	if ((drawARectangle || drawACircle) || drawingABezierCurve) {
+	if ((drawARectangle || drawACircle) || drawingABezierCurve || drawingAFigureWithNSides || drawAFigureInCircle) {
 		drawACircle = false;
 		isBegin = false;
 		drawACircle = false;
 		drawingABezierCurve = false;
+		drawAFigureInCircle = false;
+		drawingAFigureWithNSides = false;
 	}
 	if (drawALine) {
-		drawALine = false;
+		points.push_back({});
 	}
 	else {
 		drawALine = true;
@@ -301,14 +305,14 @@ void GUIMyFrame1::draw_line_buttonOnButtonClick(wxCommandEvent& event)
 // Krzywa beziera
 void GUIMyFrame1::draw_curve_buttonOnButtonClick(wxCommandEvent& event)
 {
-	if (drawingAFigureWithNSides) {
-		return;
-	}
-	if ((drawARectangle || drawACircle) || drawALine) {
+	if ((drawARectangle || drawACircle) || drawALine || drawingAFigureWithNSides || drawAFigureInCircle) {
 		drawACircle = false;
 		isBegin = false;
 		drawACircle = false;
+		drawAFigureInCircle = false;
 		drawALine = false;
+		drawARectangle = false;
+		drawingAFigureWithNSides = false;
 	}
 	if (drawingABezierCurve) {
 		drawingABezierCurve = false;
@@ -321,16 +325,13 @@ void GUIMyFrame1::draw_curve_buttonOnButtonClick(wxCommandEvent& event)
 // rysowanie prostokąta
 void GUIMyFrame1::draw_rectangle_buttonOnButtonClick(wxCommandEvent& event)
 {
-	if (drawingAFigureWithNSides) {
-		return;
-	}
-	if (drawingABezierCurve) {
-		drawingABezierCurve = false;
-	}
-	if ((drawAFigureInCircle || drawALine) || drawACircle) {
+	if (drawAFigureInCircle || drawALine || drawACircle || drawingAFigureWithNSides || drawingABezierCurve) {
 		drawACircle = false;
 		isBegin = false;
 		drawALine = false;
+		drawingAFigureWithNSides = false;
+		drawingABezierCurve = false;
+		drawAFigureInCircle = false;
 	}
 	if (!drawARectangle)
 		drawARectangle = true;
@@ -343,16 +344,13 @@ void GUIMyFrame1::draw_rectangle_buttonOnButtonClick(wxCommandEvent& event)
 // rysowanie okręgu
 void GUIMyFrame1::draw_circle_buttonOnButtonClick(wxCommandEvent& event)
 {
-	if (drawingAFigureWithNSides) {
-		return;
-	}
-	if (drawingABezierCurve) {
-		drawingABezierCurve = false;
-	}
-	if ((drawARectangle || drawALine) || drawAFigureInCircle) {
+	if ((drawARectangle || drawALine) || drawAFigureInCircle || drawingABezierCurve || drawingAFigureWithNSides) {
 		drawARectangle = false;
 		isBegin = false;
 		drawALine = false;
+		drawingABezierCurve = false;
+		drawingAFigureWithNSides = false;
+		drawAFigureInCircle = false;
 	}
 	if (!drawACircle)
 		drawACircle = true;
@@ -368,37 +366,33 @@ void GUIMyFrame1::any_figure_button4OnButtonClick(wxCommandEvent& event)
 	if (drawingAFigureWithNSides) {
 		return;
 	}
-	if (drawingABezierCurve) {
-		drawingABezierCurve = false;
-	}
-	if (((drawARectangle || drawALine) || drawACircle) || drawAFigureInCircle) {
+	if (drawARectangle || drawALine || drawACircle || drawAFigureInCircle || drawingABezierCurve) 
+	{
 		drawARectangle = false;
 		drawACircle = false;
 		isBegin = false;
 		drawALine = false;
+		drawingABezierCurve = false;
+		drawAFigureInCircle = false;
 	}
 	drawingAFigureWithNSides = true;
 	sidesLeft = number_of_sides;
-	weirdFigures.push_back({});
+	//weirdFigures.push_back({});
 }
 
 // rysowanie figur wpisanych w okrąg
 void GUIMyFrame1::figure_int_circle_button12OnButtonClick(wxCommandEvent& event)
 {
-	if (drawingAFigureWithNSides) {
-		return;
-	}
-	if (drawingABezierCurve) {
-		drawingABezierCurve = false;
-	}
-	if ((drawARectangle || drawALine) || drawACircle) {
+	if (drawARectangle || drawALine || drawACircle || drawingABezierCurve || drawingAFigureWithNSides) {
 		drawARectangle = false;
-		isBegin = false;
 		drawALine = false;
+		drawingABezierCurve = false;
+		drawACircle = false;
+		isBegin = false;
+		drawingAFigureWithNSides = false;
 	}
 	if (!drawAFigureInCircle) {
 		drawAFigureInCircle = true;
-		figuresInCircles.push_back({});
 	}
 	else {
 		drawAFigureInCircle = false;
@@ -413,7 +407,6 @@ void GUIMyFrame1::filling_checkBox1OnCheckBox(wxCommandEvent& event)
 
 void GUIMyFrame1::figure_sides_choice1OnChoice(wxCommandEvent& event)
 {
-	// TODO: Implement figure_sides_choice1OnChoice
 	number_of_sides = event.GetSelection() + 3;
 }
 

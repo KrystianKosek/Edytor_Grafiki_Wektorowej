@@ -38,25 +38,25 @@ MyFrame1::MyFrame1(wxWindow* parent, wxWindowID id, const wxString& title, const
 	gbSizer1->SetFlexibleDirection(wxBOTH);
 	gbSizer1->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
-	draw_line_button = new wxButton(this, wxID_ANY, wxT("prosta"), wxDefaultPosition, wxDefaultSize, 0);
+	draw_line_button = new wxButton(this, wxID_ANY, wxT("Prosta"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(draw_line_button, wxGBPosition(0, 0), wxGBSpan(1, 1), wxALL, 5);
 
-	draw_curve_button = new wxButton(this, wxID_ANY, wxT("krzywa"), wxDefaultPosition, wxDefaultSize, 0);
+	draw_curve_button = new wxButton(this, wxID_ANY, wxT("Krzywa"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(draw_curve_button, wxGBPosition(0, 1), wxGBSpan(1, 1), wxALL, 5);
 
-	draw_rectangle_button = new wxButton(this, wxID_ANY, wxT("prostokąt"), wxDefaultPosition, wxDefaultSize, 0);
+	draw_rectangle_button = new wxButton(this, wxID_ANY, wxT("Prostokat"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(draw_rectangle_button, wxGBPosition(1, 0), wxGBSpan(1, 1), wxALL, 5);
 
-	draw_circle_button = new wxButton(this, wxID_ANY, wxT("okrąg"), wxDefaultPosition, wxDefaultSize, 0);
+	draw_circle_button = new wxButton(this, wxID_ANY, wxT("Okrag"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(draw_circle_button, wxGBPosition(1, 1), wxGBSpan(1, 1), wxALL, 5);
 
-	any_figure_button4 = new wxButton(this, wxID_ANY, wxT("wielokąt\n"), wxDefaultPosition, wxDefaultSize, 0);
+	any_figure_button4 = new wxButton(this, wxID_ANY, wxT("Wielokat"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(any_figure_button4, wxGBPosition(2, 0), wxGBSpan(1, 1), wxALL, 5);
 
-	figure_int_circle_button12 = new wxButton(this, wxID_ANY, wxT("wielokąt \nwpisany"), wxDefaultPosition, wxDefaultSize, 0);
+	figure_int_circle_button12 = new wxButton(this, wxID_ANY, wxT("Wielokat \nwpisany"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(figure_int_circle_button12, wxGBPosition(2, 1), wxGBSpan(1, 1), wxALL, 5);
 
-	filling_checkBox1 = new wxCheckBox(this, wxID_ANY, wxT("wypełnienie"), wxDefaultPosition, wxSize(-1, -1), 0);
+	filling_checkBox1 = new wxCheckBox(this, wxID_ANY, wxT("Wypelnienie"), wxDefaultPosition, wxSize(-1, -1), 0);
 	filling_checkBox1->SetValue(true);
 	gbSizer1->Add(filling_checkBox1, wxGBPosition(3, 1), wxGBSpan(1, 1), wxALL, 5);
 
@@ -66,34 +66,34 @@ MyFrame1::MyFrame1(wxWindow* parent, wxWindowID id, const wxString& title, const
 	figure_sides_choice1->SetSelection(0);
 	gbSizer1->Add(figure_sides_choice1, wxGBPosition(4, 0), wxGBSpan(1, 1), wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 
-	line_color_button7 = new wxButton(this, wxID_ANY, wxT("kolor linii"), wxDefaultPosition, wxDefaultSize, 0);
+	line_color_button7 = new wxButton(this, wxID_ANY, wxT("Kolor linii"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(line_color_button7, wxGBPosition(4, 1), wxGBSpan(1, 1), wxALL, 5);
 
-	save_image_button8 = new wxButton(this, wxID_ANY, wxT("zapisz obraz"), wxDefaultPosition, wxDefaultSize, 0);
+	save_image_button8 = new wxButton(this, wxID_ANY, wxT("Zapisz obraz"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(save_image_button8, wxGBPosition(8, 0), wxGBSpan(1, 1), wxALL, 5);
 
-	figure_color_filling_button10 = new wxButton(this, wxID_ANY, wxT("kolor \nwypełnienia"), wxDefaultPosition, wxDefaultSize, 0);
+	figure_color_filling_button10 = new wxButton(this, wxID_ANY, wxT("Kolor \nwypelnienia"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(figure_color_filling_button10, wxGBPosition(5, 1), wxGBSpan(1, 1), wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
-	rotate_figure_button11 = new wxButton(this, wxID_ANY, wxT("obróć"), wxDefaultPosition, wxDefaultSize, 0);
+	rotate_figure_button11 = new wxButton(this, wxID_ANY, wxT("Obroc"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(rotate_figure_button11, wxGBPosition(6, 1), wxGBSpan(1, 1), wxALL, 5);
 
-	move_figure_button12 = new wxButton(this, wxID_ANY, wxT("przesuń"), wxDefaultPosition, wxDefaultSize, 0);
+	move_figure_button12 = new wxButton(this, wxID_ANY, wxT("Przesun"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(move_figure_button12, wxGBPosition(6, 0), wxGBSpan(1, 1), wxALL, 5);
 
-	size_change_button13 = new wxButton(this, wxID_ANY, wxT("zmień\nrozmiar"), wxDefaultPosition, wxDefaultSize, 0);
+	size_change_button13 = new wxButton(this, wxID_ANY, wxT("Zmien\nrozmiar"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(size_change_button13, wxGBPosition(5, 0), wxGBSpan(1, 1), wxALL, 5);
 
-	load_image_button9 = new wxButton(this, wxID_ANY, wxT("wczytaj obraz"), wxDefaultPosition, wxDefaultSize, 0);
+	load_image_button9 = new wxButton(this, wxID_ANY, wxT("Wczytaj obraz"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(load_image_button9, wxGBPosition(8, 1), wxGBSpan(1, 1), wxALL, 5);
 
-	move_wierzcholek_button14 = new wxButton(this, wxID_ANY, wxT("przesuń\nwierzchołek"), wxDefaultPosition, wxDefaultSize, 0);
+	move_wierzcholek_button14 = new wxButton(this, wxID_ANY, wxT("Przesun\nwierzcholek"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(move_wierzcholek_button14, wxGBPosition(7, 0), wxGBSpan(1, 1), wxALL, 5);
 
-	delete_figure_button15 = new wxButton(this, wxID_ANY, wxT("usuń"), wxDefaultPosition, wxDefaultSize, 0);
+	delete_figure_button15 = new wxButton(this, wxID_ANY, wxT("Usun"), wxDefaultPosition, wxDefaultSize, 0);
 	gbSizer1->Add(delete_figure_button15, wxGBPosition(7, 1), wxGBSpan(1, 1), wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
-	m_staticText1 = new wxStaticText(this, wxID_ANY, wxT("boki wielokąta"), wxDefaultPosition, wxDefaultSize, 0);
+	m_staticText1 = new wxStaticText(this, wxID_ANY, wxT("Boki wielokata"), wxDefaultPosition, wxDefaultSize, 0);
 	m_staticText1->Wrap(-1);
 	gbSizer1->Add(m_staticText1, wxGBPosition(3, 0), wxGBSpan(1, 1), wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 
