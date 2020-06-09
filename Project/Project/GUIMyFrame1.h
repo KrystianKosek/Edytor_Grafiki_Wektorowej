@@ -66,24 +66,34 @@ private:
 	wxImageHandler * image_handler;
 	wxFileDialog * _fileDialog;
 	int number_of_sides;
-	std::vector<std::list<std::pair<wxPoint, wxColour>>> points;
+
+	std::vector<std::list<std::pair<wxPoint, wxColour>>> points;		//wektor przechowujacy listy punktow, kazda lista rowna sie jednej prostej
 	bool drawALine;	// ta zmienna jak jest true, to znaczy że rysujemy linie aktualnie
-	bool drawACircle;	// ta zmienna jak jest jest true to znaczy że rysujemy okrąg
+
 	std::multimap<wxPoint *, std::pair<float, wxColour>> circles;	// mapa punktów, klucz jest środkiem okręgu, wartość to prmień
 	wxPoint begin;	// punkt startowy używany do rysowania okregów ( środek okręgu )
+	bool drawACircle;	// ta zmienna jak jest jest true to znaczy że rysujemy okrąg
 	bool isBegin;	// jest true w momencie gdy użytkownik kliknął i wybrał środek rysowanego okręgu
+
 	bool drawARectangle;	// jeśli jest true to rysujemy prostokąt
 	//std::multimap<wxPoint *, wxPoint *> rectangles;		// mapa punktów, klucz jest pkt dolnym lewym, wartośc jest pkt górnym prawym
 	std::list<std::pair<std::pair<wxPoint *, wxPoint *>, wxColour>> rectangles;
+
 	bool drawingAFigureWithNSides;	// jesli true to rysujemy te dziwne figury
 	int sidesLeft;	// zmienna informuje nas ile jeszcze zostało boków do narysowania ( dziwne figury )
+	bool sides_amount_changed;
 	std::vector<std::vector<std::pair<wxPoint, wxColour>>> weirdFigures;	// zbiór dziwnych figur
+
 	bool drawAFigureInCircle;	// jesli true to rysujemy figury wpisane w okrąg
 	std::vector<std::vector<std::pair<wxPoint, wxColour>>> figuresInCircles;	// figury wpisane w okrąg
+	
 	bool drawingABezierCurve;
+	std::vector<std::vector<wxPoint>> bezierarray;	//tablica krzywych beziera
 	std::vector<wxPoint> bezierCurve;	// vector z punktami, punkt odchylenia
-	std::vector<wxPoint>::iterator selected;	// aktualnie wybrany pkt poprzez wcisniecie lewego klawisza
 	wxColour bezierCurveColor;
+
+	std::vector<wxPoint>::iterator selected;	// aktualnie wybrany pkt poprzez wcisniecie lewego klawisza
+	
 };
 
 #endif // __GUIMyFrame1__
