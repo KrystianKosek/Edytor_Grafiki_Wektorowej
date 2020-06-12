@@ -67,7 +67,7 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 		begin = event.GetPosition();
 		isBegin = true;
 		circles.insert({ new wxPoint(begin), {1, line_colour} });
-		m_panel1->Refresh();
+		//m_panel1->Refresh();
 	}
 	// rysowanie prostokąta
 	else if (event.LeftDown() && drawARectangle) {
