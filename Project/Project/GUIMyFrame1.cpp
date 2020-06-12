@@ -191,13 +191,14 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 
 void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
 	// rysowanie krzywej beziera
-	if ((drawingABezierCurve && event.LeftIsDown()) && selected != bezierCurve.end())
+	if ((drawingABezierCurve && event.LeftIsDown()) && selected != bezierCurve.end() && bezierCurve.size() > 0)
 	{
 		wxPoint p = event.GetPosition();
-		selected = bezierCurve.end();
-		--selected;
+		//selected = bezierCurve.end();
+		//--selected;
 		selected->x = p.x;
 		selected->y = p.y;
+		bezierArray[bezierArray.size() - 1] = bezierCurve;
 		m_panel1->Refresh();
 	}
 	// rysowanie okręgu
@@ -738,10 +739,11 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 			dcBuffer.SetPen(wxPen(wxColor(bezierCurveColors[i]), 1));
 			dcBuffer.DrawSpline(bezierCurve.size(), &(bezierCurve[0]));
 		}
-		for (std::vector<wxPoint>::iterator iterator = bezierCurve.begin(); iterator != bezierCurve.end(); iterator++)
-		{
-			dcBuffer.DrawCircle(*iterator, 5);
-		}
+		if (i == bezierArray.size() - 1)
+			for (std::vector<wxPoint>::iterator iterator = bezierCurve.begin(); iterator != bezierCurve.end(); iterator++)
+			{
+				dcBuffer.DrawCircle(*iterator, 5);
+			}
 		//if (bezierCurve.size() > 2) {
 		//	if (selected != bezierCurve.end())
 		//	{
