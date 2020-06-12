@@ -38,7 +38,7 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 			selected = bezierCurve.end();
 			selected--;
 			bezierCurve.push_back(currentPoint);
-			bezierCurveColor = line_colour;
+			//bezierCurveColor = line_colour;
 		}
 		m_panel1->Refresh();
 	}
@@ -316,11 +316,13 @@ void GUIMyFrame1::draw_curve_buttonOnButtonClick(wxCommandEvent& event)
 	}
 	if (drawingABezierCurve) {
 		bezierArray.push_back(bezierCurve);
+		bezierCurveColors.push_back({});
 		bezierCurve.clear();
 		return;
 	}
 	else {
 		bezierArray.push_back(bezierCurve);
+		bezierCurveColors.push_back({});
 		bezierCurve.clear();
 		drawingABezierCurve = true;
 	}
@@ -416,6 +418,8 @@ void GUIMyFrame1::line_color_button7OnButtonClick(wxCommandEvent& event)
 	wxColourDialog colourDialog(this);
 	if (colourDialog.ShowModal() == wxID_OK)
 		line_colour = colourDialog.GetColourData().GetColour();
+	if (drawingABezierCurve)
+		bezierCurveColors[bezierCurveColors.size() - 1] = line_colour;
 	Refresh();
 }
 
@@ -448,16 +452,25 @@ void GUIMyFrame1::save_image_button8OnButtonClick(wxCommandEvent& event)
 		json weirdFigures_array;
 		json tmp_line;
 		json figures_in_circles_array;
-		
-		if (bezierCurve.size()>0) {
-			for (const auto& v : bezierCurve) {
-				obj["color"] = bezierCurveColor.GetRGB();
-				obj["x"] = v.x;
-				obj["y"] = v.y;
-				bezier_array.push_back(obj);
+		if (bezierArray.size() > 0)
+		{
+			for (int i=0; i<bezierArray.size(); i++)
+			//for (const auto& x : bezierArray)
+			{
+				const auto& x = bezierArray[i];
+				if (bezierCurve.size() > 0) {
+					for (const auto& v : x) {
+						obj["color"] = bezierCurveColors[i].GetRGB();
+						obj["x"] = v.x;
+						obj["y"] = v.y;
+						tmp_line.push_back(obj);
+					}
+					bezier_array.push_back(tmp_line);
+					obj.clear();
+					tmp_line.clear();
+				}
 			}
 			_event["bezier_curve"] = bezier_array;
-			obj.clear();
 		}
 		if (points.size() > 0) {
 			for (const auto& v : points) {
@@ -571,14 +584,21 @@ void GUIMyFrame1::load_image_button9OnButtonClick(wxCommandEvent& event)
 			json _read;
 			ifs >> _read;
 			if (_read["bezier_curve"].size() > 0) {
-				bezierCurveColor.SetRGB(_read["bezier_curve"][0]["color"].get<int>());
-				for (const auto& v : _read["bezier_curve"]) {
-					int x = v["x"].get<int>();
-					int y = v["y"].get<int>();
-					bezierCurve.push_back(wxPoint(x, y));
+				int i = 0;
+				for (const auto& v : _read["bezier_curve"])
+				{
+					std::vector<wxPoint> tmp;
+					bezierCurveColors[i].SetRGB(v[0]["color"].get<int>());
+					for (const auto& z : v) {
+						int x = z["x"].get<int>();
+						int y = z["y"].get<int>();
+						bezierCurve.push_back(wxPoint(x, y));
+					}
+					//selected = bezierCurve.end();
+					//--selected;
+					bezierArray.push_back(bezierCurve);
+					i++;
 				}
-				selected = bezierCurve.end();
-				--selected;
 			}
 			if (_read["lines_list"].size() > 0) {
 				for (const auto& v : _read["lines_list"]) {
@@ -714,7 +734,7 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 		// rysowanie krzywych beziera
 		if (bezierCurve.size() > 2)
 		{
-			dcBuffer.SetPen(wxPen(wxColor(bezierCurveColor), 1));
+			dcBuffer.SetPen(wxPen(wxColor(bezierCurveColors[i]), 1));
 			dcBuffer.DrawSpline(bezierCurve.size(), &(bezierCurve[0]));
 		}
 		for (std::vector<wxPoint>::iterator iterator = bezierCurve.begin(); iterator != bezierCurve.end(); iterator++)
