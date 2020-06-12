@@ -185,11 +185,11 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 
 void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
 	// rysowanie krzywej beziera
-	if ((drawingABezierCurve && event.LeftIsDown()) && selected != bezierCurve.end())
+	if ((drawingABezierCurve && event.LeftIsDown()) && selected != bezierCurve.end() && bezierCurve.size() > 0)
 	{
 		wxPoint p = event.GetPosition();
-		selected = bezierCurve.end();
-		--selected;
+		//selected = bezierCurve.end();
+		//--selected;
 		selected->x = p.x;
 		selected->y = p.y;
 		m_panel1->Refresh();

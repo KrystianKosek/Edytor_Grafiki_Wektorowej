@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\Adrian Góral\Desktop\Grafika Komputerowa\Project\Edytor_Grafiki_Wektorowej\Project\Project\include;C:\wxWidgets-3.04\include\msvc;C:\wxWidgets-3.04\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\kryst\Desktop\Studia AGH\Semestr 4\Podstawy grafiki komputerowej\Edytor_Grafiki_Wektorowej\Project\Project\include;C:\wxWidgets-3.04\include\msvc;C:\wxWidgets-3.04\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\wxWidgets-3.04\lib\vc_lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
