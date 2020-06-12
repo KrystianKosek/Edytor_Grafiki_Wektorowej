@@ -1,9 +1,9 @@
 ﻿#include "GUIMyFrame1.h"
 #include <algorithm>
 
-GUIMyFrame1::GUIMyFrame1(wxWindow* parent) : MyFrame1(nullptr), image_handler(new wxPNGHandler())
+GUIMyFrame1::GUIMyFrame1(wxWindow* parent) : MyFrame1(nullptr)
 {
-	wxImage::AddHandler(image_handler);
+	//wxImage::AddHandler(image_handler);
 	_fileDialog = new wxFileDialog(this, _("Wybierz plik:"), _(""), _("result.json"), _(".json"), wxFD_SAVE);
 	number_of_sides = 3;
 	drawALine = false;
@@ -114,6 +114,7 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 	// rysowanie krzywej beziera
 	if (drawingABezierCurve) {
 		selected = bezierCurve.end();
+		bezierArray[bezierArray.size() - 1] = bezierCurve;
 		m_panel1->Refresh();
 	}
 	// rysowanie okręgu
@@ -288,7 +289,7 @@ void GUIMyFrame1::draw_line_buttonOnButtonClick(wxCommandEvent& event)
 	if ((drawARectangle || drawACircle) || drawingABezierCurve || drawingAFigureWithNSides || drawAFigureInCircle) {
 		drawACircle = false;
 		isBegin = false;
-		drawACircle = false;
+		drawARectangle = false;
 		drawingABezierCurve = false;
 		drawAFigureInCircle = false;
 		drawingAFigureWithNSides = false;
@@ -308,16 +309,19 @@ void GUIMyFrame1::draw_curve_buttonOnButtonClick(wxCommandEvent& event)
 	if ((drawARectangle || drawACircle) || drawALine || drawingAFigureWithNSides || drawAFigureInCircle) {
 		drawACircle = false;
 		isBegin = false;
-		drawACircle = false;
 		drawAFigureInCircle = false;
 		drawALine = false;
 		drawARectangle = false;
 		drawingAFigureWithNSides = false;
 	}
 	if (drawingABezierCurve) {
-		drawingABezierCurve = false;
+		bezierArray.push_back(bezierCurve);
+		bezierCurve.clear();
+		return;
 	}
 	else {
+		bezierArray.push_back(bezierCurve);
+		bezierCurve.clear();
 		drawingABezierCurve = true;
 	}
 }
@@ -336,8 +340,7 @@ void GUIMyFrame1::draw_rectangle_buttonOnButtonClick(wxCommandEvent& event)
 	if (!drawARectangle)
 		drawARectangle = true;
 	else {
-		drawARectangle = false;
-		isBegin = false;
+		return;
 	}
 }
 
@@ -355,8 +358,7 @@ void GUIMyFrame1::draw_circle_buttonOnButtonClick(wxCommandEvent& event)
 	if (!drawACircle)
 		drawACircle = true;
 	else {
-		drawACircle = false;
-		isBegin = false;
+		return;
 	}
 }
 
@@ -395,15 +397,14 @@ void GUIMyFrame1::figure_int_circle_button12OnButtonClick(wxCommandEvent& event)
 		drawAFigureInCircle = true;
 	}
 	else {
-		drawAFigureInCircle = false;
-		isBegin = false;
+		return;
 	}
 }
 
-void GUIMyFrame1::filling_checkBox1OnCheckBox(wxCommandEvent& event)
-{
+//void GUIMyFrame1::filling_checkBox1OnCheckBox(wxCommandEvent& event)
+//{
 	// TODO: Implement filling_checkBox1OnCheckBox
-}
+//}
 
 void GUIMyFrame1::figure_sides_choice1OnChoice(wxCommandEvent& event)
 {
@@ -412,8 +413,6 @@ void GUIMyFrame1::figure_sides_choice1OnChoice(wxCommandEvent& event)
 
 void GUIMyFrame1::line_color_button7OnButtonClick(wxCommandEvent& event)
 {
-	// do zmiany, bo na razie koloruje wszystko co było, jest i będzie narysowane
-	// ale myśle, że trzeba to pod sam koniec zmienić
 	wxColourDialog colourDialog(this);
 	if (colourDialog.ShowModal() == wxID_OK)
 		line_colour = colourDialog.GetColourData().GetColour();
@@ -531,28 +530,28 @@ void GUIMyFrame1::save_image_button8OnButtonClick(wxCommandEvent& event)
 	Refresh();
 }
 
-void GUIMyFrame1::figure_color_filling_button10OnButtonClick(wxCommandEvent& event)
+/*void GUIMyFrame1::figure_color_filling_button10OnButtonClick(wxCommandEvent& event)
 {
 	wxColourDialog colourDialog(this);
 	if (colourDialog.ShowModal() == wxID_OK)
 		filling_colour = colourDialog.GetColourData().GetColour();
 	Refresh();
-}
+}*/
 
-void GUIMyFrame1::rotate_figure_button11OnButtonClick(wxCommandEvent& event)
+/*void GUIMyFrame1::rotate_figure_button11OnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement rotate_figure_button11OnButtonClick
-}
+}*/
 
-void GUIMyFrame1::move_figure_button12OnButtonClick(wxCommandEvent& event)
+/*void GUIMyFrame1::move_figure_button12OnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement move_figure_button12OnButtonClick
-}
+}*/
 
-void GUIMyFrame1::size_change_button13OnButtonClick(wxCommandEvent& event)
-{
+//void GUIMyFrame1::size_change_button13OnButtonClick(wxCommandEvent& event)
+//{
 	// TODO: Implement size_change_button13OnButtonClick
-}
+//}
 
 void GUIMyFrame1::load_image_button9OnButtonClick(wxCommandEvent& event)
 {
@@ -647,15 +646,15 @@ void GUIMyFrame1::load_image_button9OnButtonClick(wxCommandEvent& event)
 	Refresh();
 }
 
-void GUIMyFrame1::move_wierzcholek_button14OnButtonClick(wxCommandEvent& event)
+/*void GUIMyFrame1::move_wierzcholek_button14OnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement move_wierzcholek_button14OnButtonClick
-}
+}*/
 
-void GUIMyFrame1::delete_figure_button15OnButtonClick(wxCommandEvent& event)
-{
+//void GUIMyFrame1::delete_figure_button15OnButtonClick(wxCommandEvent& event)
+//{
 	// TODO: Implement delete_figure_button15OnButtonClick
-}
+//}
 
 void GUIMyFrame1::draw(wxClientDC & dcClient) {
 	wxBufferedDC dcBuffer(&dcClient);
@@ -709,23 +708,27 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 			}
 		}
 	}
-	// rysowanie krzywych beziera
-	if (bezierCurve.size() > 2)
+	for (auto i = 0; i < bezierArray.size(); i++)
 	{
-		dcBuffer.SetPen(wxPen(wxColor(bezierCurveColor), 1));
-		dcBuffer.DrawSpline(bezierCurve.size(), &(bezierCurve[0]));
-	}
-	for (std::vector<wxPoint>::iterator iterator = bezierCurve.begin(); iterator != bezierCurve.end(); iterator++)
-	{
-		dcBuffer.DrawCircle(*iterator, 5);
-	}
-	if (bezierCurve.size() > 2) {
-		if (selected != bezierCurve.end())
+		std::vector<wxPoint> bezierCurve = bezierArray[i];
+		// rysowanie krzywych beziera
+		if (bezierCurve.size() > 2)
 		{
-			dcBuffer.SetPen(*wxRED_PEN);
-			dcBuffer.SetBrush(*wxRED_BRUSH);
-			dcBuffer.DrawCircle(*selected, 4);
+			dcBuffer.SetPen(wxPen(wxColor(bezierCurveColor), 1));
+			dcBuffer.DrawSpline(bezierCurve.size(), &(bezierCurve[0]));
 		}
+		for (std::vector<wxPoint>::iterator iterator = bezierCurve.begin(); iterator != bezierCurve.end(); iterator++)
+		{
+			dcBuffer.DrawCircle(*iterator, 5);
+		}
+		//if (bezierCurve.size() > 2) {
+		//	if (selected != bezierCurve.end())
+		//	{
+		//		dcBuffer.SetPen(*wxRED_PEN);
+		//		dcBuffer.SetBrush(*wxRED_BRUSH);
+		//		dcBuffer.DrawCircle(*selected, 4);
+		//	}
+		//}
 	}
 }
 

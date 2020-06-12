@@ -44,17 +44,17 @@ protected:
 	wxButton* draw_circle_button;
 	wxButton* any_figure_button4;
 	wxButton* figure_int_circle_button12;
-	wxCheckBox* filling_checkBox1;
+	//wxCheckBox* filling_checkBox1;
 	wxChoice* figure_sides_choice1;
 	wxButton* line_color_button7;
 	wxButton* save_image_button8;
-	wxButton* figure_color_filling_button10;
-	wxButton* rotate_figure_button11;
-	wxButton* move_figure_button12;
-	wxButton* size_change_button13;
+	//wxButton* figure_color_filling_button10;
+	//wxButton* rotate_figure_button11;
+	//wxButton* move_figure_button12;
+	//wxButton* size_change_button13;
 	wxButton* load_image_button9;
-	wxButton* move_wierzcholek_button14;
-	wxButton* delete_figure_button15;
+	//wxButton* move_wierzcholek_button14;
+	//wxButton* delete_figure_button15;
 	wxStaticText* m_staticText1;
 
 	// Virtual event handlers, overide them in your derived class
@@ -69,22 +69,22 @@ protected:
 	virtual void draw_circle_buttonOnButtonClick(wxCommandEvent& event) { event.Skip(); }
 	virtual void any_figure_button4OnButtonClick(wxCommandEvent& event) { event.Skip(); }
 	virtual void figure_int_circle_button12OnButtonClick(wxCommandEvent& event) { event.Skip(); }
-	virtual void filling_checkBox1OnCheckBox(wxCommandEvent& event) { event.Skip(); }
+	//virtual void filling_checkBox1OnCheckBox(wxCommandEvent& event) { event.Skip(); }
 	virtual void figure_sides_choice1OnChoice(wxCommandEvent& event) { event.Skip(); }
 	virtual void line_color_button7OnButtonClick(wxCommandEvent& event) { event.Skip(); }
 	virtual void save_image_button8OnButtonClick(wxCommandEvent& event) { event.Skip(); }
 	virtual void figure_color_filling_button10OnButtonClick(wxCommandEvent& event) { event.Skip(); }
 	virtual void rotate_figure_button11OnButtonClick(wxCommandEvent& event) { event.Skip(); }
-	virtual void move_figure_button12OnButtonClick(wxCommandEvent& event) { event.Skip(); }
-	virtual void size_change_button13OnButtonClick(wxCommandEvent& event) { event.Skip(); }
+	//virtual void move_figure_button12OnButtonClick(wxCommandEvent& event) { event.Skip(); }
+	//virtual void size_change_button13OnButtonClick(wxCommandEvent& event) { event.Skip(); }
 	virtual void load_image_button9OnButtonClick(wxCommandEvent& event) { event.Skip(); }
-	virtual void move_wierzcholek_button14OnButtonClick(wxCommandEvent& event) { event.Skip(); }
-	virtual void delete_figure_button15OnButtonClick(wxCommandEvent& event) { event.Skip(); }
+	//virtual void move_wierzcholek_button14OnButtonClick(wxCommandEvent& event) { event.Skip(); }
+	//virtual void delete_figure_button15OnButtonClick(wxCommandEvent& event) { event.Skip(); }
 
 
 public:
 
-	MyFrame1(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Edytor Grafiki Wektorowej - Projekt Adrian Góral, Krystian Kosek i Bartosz Mikołajczyk"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(999, 690), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);
+	MyFrame1(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Edytor Grafiki Wektorowej - Projekt Adrian Goral, Krystian Kosek i Bartosz Mikolajczyk"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(999, 690), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);
 
 	~MyFrame1();
 
