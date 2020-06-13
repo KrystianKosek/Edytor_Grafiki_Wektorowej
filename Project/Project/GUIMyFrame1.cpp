@@ -21,10 +21,9 @@ GUIMyFrame1::GUIMyFrame1(wxWindow* parent) : MyFrame1(nullptr)
 }
 
 void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
-	// rysowanie krzywej beziera
+	
 	if (drawingABezierCurve) {
 		wxPoint currentPoint = event.GetPosition();
-		//for (std::vector<wxPoint>::iterator iterator = bezierCurve.begin(); iterator != bezierCurve.end(); iterator++)
 		std::vector<wxPoint>::iterator iterator = bezierArray[bezierArray.size() - 1].begin();
 		while (iterator != bezierArray[bezierArray.size() - 1].end())
 		{
@@ -35,24 +34,19 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 				selected->y = currentPoint.y;
 			}
 			iterator++;
+			
 		}
-		//if (selected == bezierCurve.end())
 		if (selected == bezierArray[bezierArray.size() -1].end())
-		{
-			//selected = bezierCurve.end();
-			selected--;
-			//bezierCurve.push_back(currentPoint);
 			bezierArray[bezierArray.size() - 1].push_back(currentPoint);
-			//bezierCurveColor = line_colour;
-		}
+
 		m_panel1->Refresh();
 	}
-	// rysowanie linii
+	
 	else if (event.LeftDown() && drawALine) {
 		wxPoint point = event.GetPosition();
 		points[points.size() - 1].push_back({ wxPoint(point.x, point.y), line_colour});
 	}
-	// rysowanie tych dziwnych figur zlożonych z iluś tam boków
+	
 	else if (event.LeftDown() && drawingAFigureWithNSides) {
 		if (sidesLeft == 0)
 			sidesLeft = number_of_sides;
@@ -63,24 +57,21 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 		weirdFigures[weirdFigures.size() - 1].push_back({ point, line_colour });
 		if (sidesLeft == 0) {
 			weirdFigures[weirdFigures.size() - 1].push_back({ weirdFigures[weirdFigures.size() - 1][0].first, line_colour });
-			//weirdFigures.push_back({});
-			//drawingAFigureWithNSides = false;
 		}
 	}
-	// rysowanie okręgu
+	
 	else if (event.LeftDown() && drawACircle) {
 		begin = event.GetPosition();
 		isBegin = true;
 		circles.insert({ new wxPoint(begin), {1, line_colour} });
-		//m_panel1->Refresh();
 	}
-	// rysowanie prostokąta
+	
 	else if (event.LeftDown() && drawARectangle) {
 		begin = event.GetPosition();
 		isBegin = true;
 		rectangles.push_back({ { new wxPoint(begin), new wxPoint(begin.x + 1, begin.y + 1) }, line_colour});
 	}
-	// rysowanie figury wpisanej w okrąg
+	
 	else if (event.LeftDown() && drawAFigureInCircle) {
 		figuresInCircles.push_back({});
 		begin = event.GetPosition();
@@ -116,14 +107,12 @@ void GUIMyFrame1::panelOnLeftDown(wxMouseEvent& event) {
 	}
 }
 void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
-	// rysowanie krzywej beziera
+	
 	if (drawingABezierCurve) {
-		//selected = bezierCurve.end();
 		selected = bezierArray[bezierArray.size() - 1].end();
-		//bezierArray[bezierArray.size() - 1] = bezierCurve;
 		m_panel1->Refresh();
 	}
-	// rysowanie okręgu
+	
 	else if (drawACircle) {
 		wxPoint endOfFigure = event.GetPosition();
 		float x = abs(begin.x - endOfFigure.x);
@@ -140,7 +129,7 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 		
 		m_panel1->Refresh();
 	}
-	// rysowanie prostokąta
+	
 	else if (drawARectangle) {
 		wxPoint endOfFigure = event.GetPosition();
 		std::list<std::pair<std::pair<wxPoint *, wxPoint *>, wxColour>>::iterator it = rectangles.begin();
@@ -154,7 +143,7 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 		isBegin = false;
 		m_panel1->Refresh();
 	}
-	// rysowanie figury wpisanej w okrąg
+	
 	else if (drawAFigureInCircle) {
 		wxPoint end = event.GetPosition();
 		float x = abs(begin.x - end.x);
@@ -190,7 +179,6 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 				figuresInCircles[figuresInCircles.size() - 1][i].first = wxPoint(x + sin(2 * M_PI - alfa)*r, y - cos(2 * M_PI - alfa)*r);
 		}
 		figuresInCircles[figuresInCircles.size() - 1][figuresInCircles[figuresInCircles.size() - 1].size() - 1] = figuresInCircles[figuresInCircles.size() - 1][0];
-		//drawAFigureInCircle = false;
 		m_panel1->Refresh();
 	}
 }
@@ -209,20 +197,16 @@ void GUIMyFrame1::turn_off_drawing()
 }
 
 void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
-	// rysowanie krzywej beziera
-	//if ((drawingABezierCurve && event.LeftIsDown()) && selected != bezierCurve.end() && bezierCurve.size() > 0)
+	
 	if ((drawingABezierCurve && event.LeftIsDown()) && selected != bezierArray[bezierArray.size() - 1].end() && bezierArray[bezierArray.size() - 1].size() > 0)
 	{
 		wxPoint p = event.GetPosition();
-		//selected = bezierCurve.end();
-		//--selected;
 		selected->x = p.x;
 		selected->y = p.y;
-		//bezierArray[bezierArray.size() - 1] = bezierCurve;
 		m_panel1->Refresh();
 	}
-	// rysowanie okręgu
-	else if (drawACircle && event.LeftIsDown()) {
+	
+	if (drawACircle && event.LeftIsDown()) {
 		wxPoint endOfFigure = event.GetPosition();
 		float x = abs(begin.x - endOfFigure.x);
 		float y = abs(begin.y - endOfFigure.y);
@@ -237,7 +221,7 @@ void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
 		it->second.first = r;
 		m_panel1->Refresh();
 	}
-	// rysowanie prostokąta
+	
 	else if (event.LeftIsDown() && drawARectangle) {
 		wxPoint endOfFigure = event.GetPosition();
 		std::list<std::pair<std::pair<wxPoint *, wxPoint *>, wxColour>>::iterator it = rectangles.begin();
@@ -250,7 +234,7 @@ void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
 		it->first.second = new wxPoint(endOfFigure);
 		m_panel1->Refresh();
 	}
-	// rysowanie figury wpisanej w okrąg
+	
 	else if (event.LeftIsDown() && drawAFigureInCircle) {
 		wxPoint end = event.GetPosition();
 		float x = abs(begin.x - end.x);
@@ -304,7 +288,7 @@ void GUIMyFrame1::m_panel1OnUpdateUI(wxUpdateUIEvent& event)
 	draw(dcClient);
 }
 
-// rysowanie lini
+
 void GUIMyFrame1::draw_line_buttonOnButtonClick(wxCommandEvent& event)
 {
 	if ((drawARectangle || drawACircle) || drawingABezierCurve || drawingAFigureWithNSides || drawAFigureInCircle) {
@@ -324,7 +308,7 @@ void GUIMyFrame1::draw_line_buttonOnButtonClick(wxCommandEvent& event)
 	}
 }
 
-// Krzywa beziera
+
 void GUIMyFrame1::draw_curve_buttonOnButtonClick(wxCommandEvent& event)
 {
 	if ((drawARectangle || drawACircle) || drawALine || drawingAFigureWithNSides || drawAFigureInCircle) {
@@ -336,22 +320,18 @@ void GUIMyFrame1::draw_curve_buttonOnButtonClick(wxCommandEvent& event)
 		drawingAFigureWithNSides = false;
 	}
 	if (drawingABezierCurve) {
-		//bezierArray.push_back(bezierCurve);
 		bezierArray.push_back({});
 		bezierCurveColors.push_back({});
-		//bezierCurve.clear();
 		return;
 	}
 	else {
-		//bezierArray.push_back(bezierCurve);
 		bezierArray.push_back({});
 		bezierCurveColors.push_back({});
-		//bezierCurve.clear();
 		drawingABezierCurve = true;
 	}
 }
 
-// rysowanie prostokąta
+
 void GUIMyFrame1::draw_rectangle_buttonOnButtonClick(wxCommandEvent& event)
 {
 	if (drawAFigureInCircle || drawALine || drawACircle || drawingAFigureWithNSides || drawingABezierCurve) {
@@ -369,7 +349,6 @@ void GUIMyFrame1::draw_rectangle_buttonOnButtonClick(wxCommandEvent& event)
 	}
 }
 
-// rysowanie okręgu
 void GUIMyFrame1::draw_circle_buttonOnButtonClick(wxCommandEvent& event)
 {
 	if ((drawARectangle || drawALine) || drawAFigureInCircle || drawingABezierCurve || drawingAFigureWithNSides) {
@@ -387,7 +366,6 @@ void GUIMyFrame1::draw_circle_buttonOnButtonClick(wxCommandEvent& event)
 	}
 }
 
-// rysowanie tych dziwnych figur
 void GUIMyFrame1::any_figure_button4OnButtonClick(wxCommandEvent& event)
 {
 	if (drawingAFigureWithNSides) {
@@ -404,10 +382,8 @@ void GUIMyFrame1::any_figure_button4OnButtonClick(wxCommandEvent& event)
 	}
 	drawingAFigureWithNSides = true;
 	sidesLeft = number_of_sides;
-	//weirdFigures.push_back({});
 }
 
-// rysowanie figur wpisanych w okrąg
 void GUIMyFrame1::figure_int_circle_button12OnButtonClick(wxCommandEvent& event)
 {
 	if (drawARectangle || drawALine || drawACircle || drawingABezierCurve || drawingAFigureWithNSides) {
@@ -426,11 +402,6 @@ void GUIMyFrame1::figure_int_circle_button12OnButtonClick(wxCommandEvent& event)
 	}
 }
 
-//void GUIMyFrame1::filling_checkBox1OnCheckBox(wxCommandEvent& event)
-//{
-	// TODO: Implement filling_checkBox1OnCheckBox
-//}
-
 void GUIMyFrame1::figure_sides_choice1OnChoice(wxCommandEvent& event)
 {
 	number_of_sides = event.GetSelection() + 3;
@@ -448,8 +419,6 @@ void GUIMyFrame1::line_color_button7OnButtonClick(wxCommandEvent& event)
 
 void GUIMyFrame1::save_image_button8OnButtonClick(wxCommandEvent& event)
 {
-	// do zmiany na jsona, ale ja bym to zostawił na sam koniec, 
-	// bo jeszcze nie znamy dokładnej formy przetrzymywania punktów wszystkich figur
 	wxClientDC dcClient(m_panel1);
 	wxBufferedDC dcBuffer(&dcClient);
 
@@ -461,7 +430,6 @@ void GUIMyFrame1::save_image_button8OnButtonClick(wxCommandEvent& event)
 	if (_fileDialog->ShowModal() == wxID_OK) {
 		Refresh();
 
-		//wybor sciezki
 		string filename = _fileDialog->GetPath();
 
 		ofstream _file;
@@ -478,10 +446,8 @@ void GUIMyFrame1::save_image_button8OnButtonClick(wxCommandEvent& event)
 		if (bezierArray.size() > 0)
 		{
 			for (int i=0; i<bezierArray.size(); i++)
-			//for (const auto& x : bezierArray)
 			{
 				const auto& x = bezierArray[i];
-				//if (bezierCurve.size() > 0) {
 				for (const auto& v : x) {
 					obj["color"] = bezierCurveColors[i].GetRGB();
 					obj["x"] = v.x;
@@ -566,29 +532,6 @@ void GUIMyFrame1::save_image_button8OnButtonClick(wxCommandEvent& event)
 	Refresh();
 }
 
-/*void GUIMyFrame1::figure_color_filling_button10OnButtonClick(wxCommandEvent& event)
-{
-	wxColourDialog colourDialog(this);
-	if (colourDialog.ShowModal() == wxID_OK)
-		filling_colour = colourDialog.GetColourData().GetColour();
-	Refresh();
-}*/
-
-/*void GUIMyFrame1::rotate_figure_button11OnButtonClick(wxCommandEvent& event)
-{
-	// TODO: Implement rotate_figure_button11OnButtonClick
-}*/
-
-/*void GUIMyFrame1::move_figure_button12OnButtonClick(wxCommandEvent& event)
-{
-	// TODO: Implement move_figure_button12OnButtonClick
-}*/
-
-//void GUIMyFrame1::size_change_button13OnButtonClick(wxCommandEvent& event)
-//{
-	// TODO: Implement size_change_button13OnButtonClick
-//}
-
 void GUIMyFrame1::load_image_button9OnButtonClick(wxCommandEvent& event)
 {
 	wxFileDialog WxOpenFileDialog(this, wxT("Wybierz plik"), wxT(""), wxT(""), wxT("Json file (*.json)|*.json"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -599,7 +542,6 @@ void GUIMyFrame1::load_image_button9OnButtonClick(wxCommandEvent& event)
 		std::ifstream ifs(_save_name);
 		if (ifs.is_open()) {
 			bezierArray.clear();
-			//bezierCurve.clear();
 			points.clear();
 			circles.clear();
 			rectangles.clear();
@@ -693,16 +635,6 @@ void GUIMyFrame1::load_image_button9OnButtonClick(wxCommandEvent& event)
 	Refresh();
 }
 
-/*void GUIMyFrame1::move_wierzcholek_button14OnButtonClick(wxCommandEvent& event)
-{
-	// TODO: Implement move_wierzcholek_button14OnButtonClick
-}*/
-
-//void GUIMyFrame1::delete_figure_button15OnButtonClick(wxCommandEvent& event)
-//{
-	// TODO: Implement delete_figure_button15OnButtonClick
-//}
-
 void GUIMyFrame1::draw(wxClientDC & dcClient) {
 	wxBufferedDC dcBuffer(&dcClient);
 	PrepareDC(dcBuffer);
@@ -711,7 +643,6 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 
 	dcBuffer.SetPen(wxPen(wxColor(line_colour), 1));
 	
-	// rysowanie prostych
 	if (points.size() > 0) {
 		for (unsigned i = 0; i < points.size(); i++) {
 			for (auto itr = points[i].begin(); itr != points[i].end(); itr++) {
@@ -724,7 +655,7 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 			}
 		}
 	}
-	// rysowanie figur wpisanych w okrąg
+
 	if (figuresInCircles.size() > 0) {
 		for (unsigned i = 0; i < figuresInCircles.size(); i++) {
 			for (unsigned j = 1; j < figuresInCircles[i].size(); j++) {
@@ -733,20 +664,20 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 			}
 		}
 	}
-	// rysowanie okręgów
+
 	dcBuffer.SetBrush(wxBrush(*wxTRANSPARENT_BRUSH));
 	for (auto itr = circles.begin(); itr != circles.end(); itr++) {
 		dcBuffer.SetPen(wxPen(wxColor(itr->second.second), 1));
 		dcBuffer.DrawCircle(*(itr->first), itr->second.first);
 	}
-	// rysowanie prostokątów
+
 	for (auto itr = rectangles.begin(); itr != rectangles.end(); itr++) {
 		dcBuffer.SetPen(wxPen(wxColor(itr->second), 1));
 		wxPoint leftUp = wxPoint(itr->first.first->x, itr->first.second->y);
 		wxPoint rightDown = wxPoint(itr->first.second->x, itr->first.first->y);
 		dcBuffer.DrawRectangle(wxRect(leftUp, rightDown));
 	}
-	// rysowanie tych dziwnych figur
+
 	if (weirdFigures.size() > 0) {
 		for (unsigned i = 0; i < weirdFigures.size(); i++) {
 			for (unsigned j = 1; j < weirdFigures[i].size(); j++) {
@@ -755,28 +686,22 @@ void GUIMyFrame1::draw(wxClientDC & dcClient) {
 			}
 		}
 	}
-	for (auto i = 0; i < bezierArray.size(); i++)
+	if (bezierArray.size() > 0)
 	{
-		std::vector<wxPoint> bezierCurve = bezierArray[i];
-		// rysowanie krzywych beziera
-		if (bezierCurve.size() > 2)
+		for (auto i = 0; i < bezierArray.size(); i++)
 		{
-			dcBuffer.SetPen(wxPen(wxColor(bezierCurveColors[i]), 1));
-			dcBuffer.DrawSpline(bezierCurve.size(), &(bezierCurve[0]));
-		}
-		if (i == bezierArray.size() - 1)
-			for (std::vector<wxPoint>::iterator iterator = bezierCurve.begin(); iterator != bezierCurve.end(); iterator++)
+			std::vector<wxPoint> bezierCurve = bezierArray[i];
+			if (bezierCurve.size() > 2)
 			{
-				dcBuffer.DrawCircle(*iterator, 5);
+				dcBuffer.SetPen(wxPen(wxColor(bezierCurveColors[i]), 1));
+				dcBuffer.DrawSpline(bezierCurve.size(), &(bezierCurve[0]));
 			}
-		//if (bezierCurve.size() > 2) {
-		//	if (selected != bezierCurve.end())
-		//	{
-		//		dcBuffer.SetPen(*wxRED_PEN);
-		//		dcBuffer.SetBrush(*wxRED_BRUSH);
-		//		dcBuffer.DrawCircle(*selected, 4);
-		//	}
-		//}
+			if (i == bezierArray.size() - 1)
+				for (std::vector<wxPoint>::iterator iterator = bezierCurve.begin(); iterator != bezierCurve.end(); iterator++)
+				{
+					dcBuffer.DrawCircle(*iterator, 5);
+				}
+		}
 	}
 }
 
