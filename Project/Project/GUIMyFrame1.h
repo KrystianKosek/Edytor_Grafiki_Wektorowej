@@ -87,7 +87,7 @@ private:
 	
 	bool drawingABezierCurve;
 	std::vector<std::vector<wxPoint>> bezierArray;
-	std::vector<wxPoint> bezierCurve;	// vector z punktami, punkt odchylenia
+	//std::vector<wxPoint> bezierCurve;	// vector z punktami, punkt odchylenia
 	std::vector<wxColour> bezierCurveColors;
 
 	std::vector<wxPoint>::iterator selected;	// aktualnie wybrany pkt poprzez wcisniecie lewego klawisza
