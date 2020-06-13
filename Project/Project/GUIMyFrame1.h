@@ -53,6 +53,7 @@ protected:
 	void load_image_button9OnButtonClick(wxCommandEvent& event);
 	//void move_wierzcholek_button14OnButtonClick(wxCommandEvent& event);
 	//void delete_figure_button15OnButtonClick(wxCommandEvent& event);
+	void turn_off_drawing();
 
 public:
 	/** Constructor */

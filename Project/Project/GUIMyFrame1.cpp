@@ -195,6 +195,19 @@ void GUIMyFrame1::panelOnLeftUp(wxMouseEvent& event) {
 	}
 }
 
+void GUIMyFrame1::turn_off_drawing()
+{
+	drawACircle = false;
+	drawAFigureInCircle = false;
+	isBegin = false;
+	drawALine = false;
+	drawARectangle = false;
+	drawAFigureInCircle = false;
+	drawingABezierCurve = false;
+	drawingAFigureWithNSides = false;
+	sidesLeft = 0;
+}
+
 void GUIMyFrame1::panelOnMotion(wxMouseEvent& event) {
 	// rysowanie krzywej beziera
 	//if ((drawingABezierCurve && event.LeftIsDown()) && selected != bezierCurve.end() && bezierCurve.size() > 0)
@@ -586,12 +599,13 @@ void GUIMyFrame1::load_image_button9OnButtonClick(wxCommandEvent& event)
 		std::ifstream ifs(_save_name);
 		if (ifs.is_open()) {
 			bezierArray.clear();
-			bezierCurve.clear();
+			//bezierCurve.clear();
 			points.clear();
 			circles.clear();
 			rectangles.clear();
 			weirdFigures.clear();
 			figuresInCircles.clear();
+			turn_off_drawing();
 			json _read;
 			ifs >> _read;
 			if (_read["bezier_curve"].size() > 0) {
