@@ -671,6 +671,7 @@ void GUIMyFrame1::load_image_button9OnButtonClick(wxCommandEvent& event)
 						_tmp.push_back(make_pair(wxPoint(x, y), _color));
 					}
 					weirdFigures.push_back(_tmp);
+					_tmp.clear();
 				}
 			}
 			if (_read["figures_in_circles"].size() > 0) {
